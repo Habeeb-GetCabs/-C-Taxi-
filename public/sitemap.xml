@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  
+  <!-- Main Home & Campaign URLs -->
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?campaign=local</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?campaign=outstation</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?campaign=hourly</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?campaign=airport</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Google Ads Sitelink Tour Landing Pages -->
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?tour=ooty-coonoor-kotagiri</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?tour=marudhamalai-isha-kovai-kutralam</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?tour=palani-temple-pilgrimage</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?tour=valparai-topslip-safari</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ais-pre-dlgb27nuubllkfrqs2ivc7-1063211486846.asia-southeast1.run.app/?tour=kodaikanal-hills</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
