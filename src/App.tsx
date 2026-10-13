@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ServicesSection } from './components/ServicesSection';
@@ -17,14 +17,13 @@ import { Footer } from './components/Footer';
 import { StickyBottomCta } from './components/StickyBottomCta';
 import { BookingModal } from './components/BookingModal';
 import { PolicyModal, PolicyType } from './components/PolicyModal';
-import { TourDetailPage } from './components/TourDetailPage';
-
-// 4 Dedicated Service Pages
-import { LocalTaxiPage } from './pages/LocalTaxiPage';
-import { OutstationCabsPage } from './pages/OutstationCabsPage';
-import { AirportTaxiPage } from './pages/AirportTaxiPage';
-import { ToursPage } from './pages/ToursPage';
-
+import { initializeTracking, trackEvent } from './utils/tracking';
+// Route-level lazy loading keeps service pages out of the initial homepage bundle.
+const TourDetailPage = lazy(() => import('./components/TourDetailPage').then(m => ({ default: m.TourDetailPage })));
+const LocalTaxiPage = lazy(() => import('./pages/LocalTaxiPage').then(m => ({ default: m.LocalTaxiPage })));
+const OutstationCabsPage = lazy(() => import('./pages/OutstationCabsPage').then(m => ({ default: m.OutstationCabsPage })));
+const AirportTaxiPage = lazy(() => import('./pages/AirportTaxiPage').then(m => ({ default: m.AirportTaxiPage })));
+const ToursPage = lazy(() => import('./pages/ToursPage').then(m => ({ default: m.ToursPage })));
 import { TOUR_PACKAGES, TourPackage } from './data/toursData';
 
 export type AppRoute = 'home' | 'local-taxi' | 'outstation-cabs' | 'airport-taxi' | 'tours' | 'tour-detail';
@@ -32,15 +31,15 @@ export type AppRoute = 'home' | 'local-taxi' | 'outstation-cabs' | 'airport-taxi
 const PAGE_META: Record<string, { title: string; desc: string }> = {
   'home': {
     title: 'C Taxi · Coimbatore – 24/7 Call Taxi, Airport Transfer & Outstation Cabs',
-    desc: 'Book C Taxi in Coimbatore at 9089223344. Instant 15-min doorstep pickup, local city rides, CJB airport transfers, outstation cabs from ₹15/km & Ooty trips from ₹3,000.'
+    desc: 'Book C Taxi in Coimbatore at 9089223344. Instant 15-min doorstep pickup, local city rides, CJB airport transfers, outstation taxi fares with clear estimates.'
   },
   'local-taxi': {
     title: 'Coimbatore Local Taxi Service — 24/7 Call Taxi in Kovai | C Taxi',
     desc: 'Fast 10-15 minute doorstep pickup across Gandhipuram, RS Puram, Peelamedu, Saravanampatti & Coimbatore. Zero surge pricing, clean AC Sedans & SUVs. Call 9089223344.'
   },
   'outstation-cabs': {
-    title: 'Outstation Cabs from Coimbatore — One-Way Drops & Ooty from ₹3,000 | C Taxi',
-    desc: 'Book outstation cabs from Coimbatore from ₹15/km for Sedan, ₹20/km for SUV. Ooty starting from ₹3,000. Mountain certified drivers, transparent tariff. Call 9089223344.'
+    title: 'Outstation Cabs from Coimbatore — One-Way Drops & Round Trips | C Taxi',
+    desc: 'Book outstation cabs from Coimbatore. Round-trip day rent and one-way rates are clearly explained, with final fare estimates and premium vehicle quotes on request. Call 9089223344.'
   },
   'airport-taxi': {
     title: 'Coimbatore Airport Taxi (CJB) — 24/7 Terminal Pickup & Drop | C Taxi',
@@ -65,8 +64,20 @@ export default function App() {
   const [activePolicyType, setActivePolicyType] = useState<PolicyType>('privacy');
 
   // Update browser document head tags for SEO & Google Ads landing page quality
-  const updateHeadTags = (title: string, description: string) => {
+  const updateHeadTags = (title: string, description: string, routePath?: string) => {
     document.title = title;
+    const normalizedPath = (routePath ?? window.location.pathname).replace(/\/{2,}/g, '/');
+    const canonicalPath = normalizedPath === '/' ? '/' : `/${normalizedPath.replace(/^\/+|\/+$/g, '')}/`;
+    const canonicalUrl = `https://www.ctaxicab.com${canonicalPath}`;
+    const setMeta = (selector: string, attribute: string, value: string) => {
+      const element = document.querySelector(selector);
+      if (element) element.setAttribute(attribute, value);
+    };
+    setMeta('link[rel="canonical"]', 'href', canonicalUrl);
+    setMeta('meta[property="og:url"]', 'content', canonicalUrl);
+    setMeta('meta[property="og:description"]', 'content', description);
+    setMeta('meta[name="twitter:title"]', 'content', title);
+    setMeta('meta[name="twitter:description"]', 'content', description);
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', description);
@@ -133,8 +144,20 @@ export default function App() {
 
   useEffect(() => {
     syncRouteFromUrl();
+    initializeTracking();
+    const handleTrackedClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const link = target?.closest('a[href]') as HTMLAnchorElement | null;
+      if (!link) return;
+      if (link.href.startsWith('tel:')) trackEvent('phone_click', { link_url: link.href });
+      if (link.href.includes('wa.me/')) trackEvent('whatsapp_click', { link_url: link.href });
+    };
+    document.addEventListener('click', handleTrackedClick);
     window.addEventListener('popstate', syncRouteFromUrl);
-    return () => window.removeEventListener('popstate', syncRouteFromUrl);
+    return () => {
+      document.removeEventListener('click', handleTrackedClick);
+      window.removeEventListener('popstate', syncRouteFromUrl);
+    };
   }, []);
 
   // Programmatic navigation that updates history and state smoothly
@@ -148,33 +171,33 @@ export default function App() {
       const found = TOUR_PACKAGES.find(t => t.slug === tourSlug);
       setActiveTourSlug(tourSlug);
       if (found) {
-        updateHeadTags(found.pageTitle, found.metaDescription);
+        updateHeadTags(found.pageTitle, found.metaDescription, `/tours/${tourSlug}/`);
       }
     } else if (route === 'local-taxi') {
       targetRoute = 'local-taxi';
       targetUrl = '/local-taxi/';
       setActiveTourSlug(null);
-      updateHeadTags(PAGE_META['local-taxi'].title, PAGE_META['local-taxi'].desc);
+      updateHeadTags(PAGE_META['local-taxi'].title, PAGE_META['local-taxi'].desc, '/local-taxi/');
     } else if (route === 'outstation-cabs') {
       targetRoute = 'outstation-cabs';
       targetUrl = '/outstation-cabs/';
       setActiveTourSlug(null);
-      updateHeadTags(PAGE_META['outstation-cabs'].title, PAGE_META['outstation-cabs'].desc);
+      updateHeadTags(PAGE_META['outstation-cabs'].title, PAGE_META['outstation-cabs'].desc, '/outstation-cabs/');
     } else if (route === 'airport-taxi') {
       targetRoute = 'airport-taxi';
       targetUrl = '/airport-taxi/';
       setActiveTourSlug(null);
-      updateHeadTags(PAGE_META['airport-taxi'].title, PAGE_META['airport-taxi'].desc);
+      updateHeadTags(PAGE_META['airport-taxi'].title, PAGE_META['airport-taxi'].desc, '/airport-taxi/');
     } else if (route === 'tours') {
       targetRoute = 'tours';
       targetUrl = '/tours/';
       setActiveTourSlug(null);
-      updateHeadTags(PAGE_META['tours'].title, PAGE_META['tours'].desc);
+      updateHeadTags(PAGE_META['tours'].title, PAGE_META['tours'].desc, '/tours/');
     } else {
       targetRoute = 'home';
       targetUrl = '/';
       setActiveTourSlug(null);
-      updateHeadTags(PAGE_META['home'].title, PAGE_META['home'].desc);
+      updateHeadTags(PAGE_META['home'].title, PAGE_META['home'].desc, '/');
     }
 
     setCurrentRoute(targetRoute);
@@ -214,7 +237,7 @@ export default function App() {
       pickup: 'Coimbatore City (Doorstep)',
       drop: tour.title,
       vehicle: 'Prime AC Sedan',
-      estimatedPrice: tour.startingPrice,
+      estimatedPrice: null,
       date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
       time: '06:30 AM',
       breakdownNote: `${tour.duration} Package: ${tour.routeOverview}`
@@ -242,6 +265,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
+        <Suspense fallback={<div className="min-h-[40vh] flex items-center justify-center text-sm text-neutral-500" role="status">Loading page…</div>}>
 
         {/* Route 1: Local Taxi Page */}
         {currentRoute === 'local-taxi' && (
@@ -298,7 +322,7 @@ export default function App() {
             {/* 2. Four service cards linking to the four dedicated service pages */}
             <ServicesSection onNavigate={handleNavigate} />
 
-            {/* 3. Popular outstation routes with accurate starting fares (Ooty from 3,000) */}
+            {/* 3. Popular outstation routes with quote-first pricing */}
             <PopularRoutesSection 
               onSelectRoute={(route) => {
                 if (route.category === 'airport') {
@@ -336,6 +360,7 @@ export default function App() {
           </>
         )}
 
+        </Suspense>
       </main>
 
       {/* Clean quiet Footer with contact information and customer policies */}

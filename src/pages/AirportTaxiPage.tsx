@@ -22,7 +22,6 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface AirportTaxiPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -49,7 +48,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
     cityLocality.includes('Railway') ? 12 : 13;
 
   // Formula: localBaseFare + (km * localPerKm)
-  const estimatedFare = vehicle.localBaseFare + (estDistance * vehicle.localPerKm);
+  const estimatedFare = vehicle.id === 'premium_suv' ? null : vehicle.localBaseFare + (estDistance * vehicle.localPerKm);
 
   const handleBookAirportCab = () => {
     onOpenBookingModal({
@@ -164,7 +163,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
               {/* Airport Terminal Visual Banner */}
               <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src={assetUrl('/images/destinations/airport-cjb-terminal.webp')}
+                  src="/images/destinations/airport-cjb-terminal.webp"
                   alt="Coimbatore International Airport terminal transfers and pickups"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -297,7 +296,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
                     <div>
                       <span className="text-[11px] text-[#A0A09C] block">Estimated Airport Fare:</span>
                       <div className="text-2xl font-black text-[#FFBF00] font-heading">
-                        ₹{estimatedFare.toLocaleString('en-IN')}
+                        {estimatedFare == null ? 'Contact for quote' : '₹' + estimatedFare.toLocaleString('en-IN')}
                       </div>
                     </div>
                     <div className="text-right">
@@ -345,15 +344,15 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { area: "Peelamedu / PSG Tech", distance: "5 km", sedan: "₹240", suv: "₹275", crysta: "₹375" },
-              { area: "Gandhipuram (Cross Cut Road)", distance: "11 km", sedan: "₹408", suv: "₹485", crysta: "₹645" },
-              { area: "RS Puram (DB Road)", distance: "14 km", sedan: "₹492", suv: "₹590", crysta: "₹780" },
-              { area: "Saravanampatti (IT Corridor)", distance: "10 km", sedan: "₹380", suv: "₹450", crysta: "₹600" },
-              { area: "Singanallur Bus Stand", distance: "8 km", sedan: "₹324", suv: "₹380", crysta: "₹510" },
-              { area: "Coimbatore Junction Railway Station", distance: "12 km", sedan: "₹436", suv: "₹520", crysta: "₹690" },
-              { area: "Thudiyalur / Mettupalayam Rd", distance: "16 km", sedan: "₹548", suv: "₹660", crysta: "₹870" },
-              { area: "Vadavalli / Marudhamalai Rd", distance: "19 km", sedan: "₹632", suv: "₹765", crysta: "₹1,005" },
-              { area: "Tiruppur City to CJB Airport", distance: "45 km", sedan: "₹1,250", suv: "₹1,600", crysta: "₹2,100" }
+              { area: "Peelamedu / PSG Tech", distance: "5 km", sedan: "₹250", suv: "₹250", crysta: "Contact for quote" },
+              { area: "Gandhipuram (Cross Cut Road)", distance: "11 km", sedan: "₹430", suv: "₹430", crysta: "Contact for quote" },
+              { area: "RS Puram (DB Road)", distance: "14 km", sedan: "₹520", suv: "₹520", crysta: "Contact for quote" },
+              { area: "Saravanampatti (IT Corridor)", distance: "10 km", sedan: "₹400", suv: "₹400", crysta: "Contact for quote" },
+              { area: "Singanallur Bus Stand", distance: "8 km", sedan: "₹340", suv: "₹340", crysta: "Contact for quote" },
+              { area: "Coimbatore Junction Railway Station", distance: "12 km", sedan: "₹460", suv: "₹460", crysta: "Contact for quote" },
+              { area: "Thudiyalur / Mettupalayam Rd", distance: "16 km", sedan: "₹580", suv: "₹580", crysta: "Contact for quote" },
+              { area: "Vadavalli / Marudhamalai Rd", distance: "19 km", sedan: "₹670", suv: "₹670", crysta: "Contact for quote" },
+              { area: "Tiruppur City to CJB Airport", distance: "45 km", sedan: "₹1,450", suv: "₹1,450", crysta: "Contact for quote" }
             ].map((item, idx) => (
               <div 
                 key={idx}
@@ -387,7 +386,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
           <div className="bg-white rounded-2xl border border-[#E5E0D8] overflow-hidden shadow-xs grid grid-cols-1 md:grid-cols-12 items-center mt-6">
             <div className="md:col-span-5 h-48 sm:h-56 relative overflow-hidden">
               <img 
-                src={assetUrl('/images/destinations/airport-cjb-pickup-bay.webp')} 
+                src="/images/destinations/airport-cjb-pickup-bay.webp" 
                 alt="Coimbatore International Airport terminal road and taxi pickup lane"
                 className="w-full h-full object-cover"
                 loading="lazy"

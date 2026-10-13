@@ -73,7 +73,7 @@ export const StickyBottomCta: React.FC<StickyBottomCtaProps> = ({ onOpenBookingM
                 </span>
               </div>
               <div className="text-[11px] text-[#A0A09C]">
-                Ooty from ₹3,000 · Outstation from ₹15/km · Hourly from ₹375/hr · Zero Peak Surge
+                Round trip ₹2,000/day + ₹12/km · One-way Sedan ₹15/km · Hourly from ₹350
               </div>
             </div>
           </div>

@@ -87,38 +87,23 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
     distanceDisplay = localKm;
     const baseFare = vehicle.localBaseFare;
     const kmCost = localKm * vehicle.localPerKm;
-    estimatedPrice = baseFare + kmCost;
+    estimatedPrice = vehicle.id === 'premium_suv' ? 0 : baseFare + kmCost;
     breakdownNote = `Standard City Fare for ~${localKm} km (Chilled AC & Fuel Included · Zero Peak Surge)`;
   } 
   else if (activeTab === 'outstation') {
     const oneWayDistance = activeDest.distance;
     const roundTripKm = oneWayDistance * 2;
-    const minBillableKm = Math.max(roundTripKm, 250 * tripDays);
+    const routeCoverageKm = activeDest.name.toLowerCase().includes('ooty') && tripDays >= 2 ? 250 : roundTripKm;
+    const minBillableKm = Math.max(routeCoverageKm, 100 * tripDays);
     distanceDisplay = minBillableKm;
-
-    const kmCost = minBillableKm * vehicle.ratePerKm;
-    const driverBatta = 500 * tripDays;
-    let hillFee = 0;
-    if (activeDest.isHill) {
-      if (vehicle.id === 'suv_ertiga') hillFee = 400;
-      else if (vehicle.id === 'premium_suv') hillFee = 600;
-    }
-
-    let calculated = kmCost + driverBatta + hillFee;
-
-    // Strict minimum starting price for Ooty is 3000
-    if (activeDest.name.toLowerCase().includes('ooty') && calculated < 3000) {
-      calculated = 3000;
-    }
-
-    estimatedPrice = Math.round(calculated);
-    breakdownNote = `${minBillableKm} km @ ₹${vehicle.ratePerKm}/km + ₹${driverBatta} Driver Batta (${tripDays} day${tripDays > 1 ? 's' : ''})${hillFee > 0 ? ` + ₹${hillFee} Hill Safety Charge` : ''}`;
+    estimatedPrice = vehicle.id === 'premium_suv' ? 0 : Math.round((2000 * tripDays) + (minBillableKm * 12));
+    breakdownNote = `${tripDays} day${tripDays > 1 ? 's' : ''} round-trip estimate; minimum 100 km/day.`;
   } 
   else if (activeTab === 'hourly') {
     estimatedPrice = calculateHourlyRate(rentalHours, vehicle.id);
     const estIncludedKm = rentalHours * 10;
     distanceDisplay = estIncludedKm;
-    breakdownNote = `${rentalHours} Hours Package (First 3 hrs @ ₹375/hr, extra @ ₹350/hr for Sedan + vehicle rate) with fuel & driver`;
+    breakdownNote = `${rentalHours} hour package with 10 km/hour included; extra distance charged by vehicle category.`;
   } 
   else if (activeTab === 'airport') {
     const estAirportDistance = airportCityLocality.includes('Peelamedu') ? 5 :
@@ -130,7 +115,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
     distanceDisplay = estAirportDistance;
     const baseFare = vehicle.localBaseFare;
     const kmCost = estAirportDistance * vehicle.localPerKm;
-    estimatedPrice = baseFare + kmCost;
+    estimatedPrice = vehicle.id === 'premium_suv' ? 0 : baseFare + kmCost;
     breakdownNote = `${airportTripType === 'to_airport' ? 'City Drop to CJB Airport' : 'CJB Airport Pickup to City'} (~${estAirportDistance} km) · Zero Flight Delay Fee`;
   }
 
@@ -159,7 +144,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
       pickup: pickupText,
       drop: dropText,
       vehicle: vehicle.name,
-      estimatedPrice,
+      estimatedPrice: vehicle.id === 'premium_suv' ? null : estimatedPrice,
       date: pickupDate,
       time: pickupTime,
       breakdownNote
@@ -172,7 +157,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
     `• Vehicle: ${vehicle.name}\n` +
     `• Pickup Date/Time: ${pickupDate} at ${pickupTime}\n` +
     `• Route: ${activeTab === 'outstation' ? `Coimbatore to ${activeDest.name}` : activeTab === 'airport' ? `${airportCityLocality} <-> CJB Airport` : `${localPickup} to ${localDrop}`}\n` +
-    `• Estimated Fare: ~₹${estimatedPrice.toLocaleString('en-IN')}\n\nPlease confirm availability and dispatch.`
+    `• Estimated Fare: ${vehicle.id === 'premium_suv' ? 'Quote requested' : '₹' + estimatedPrice.toLocaleString('en-IN')}\n\nPlease confirm availability and dispatch.`
   );
 
   return (
@@ -192,7 +177,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-[#A0A09C] mt-1">
-                Zero surge city rides · Outstation from ₹15/km · Ooty from ₹3,000 · Hourly from ₹375/hr
+                Local from ₹100 + ₹30/km · Round trip ₹2,000/day + ₹12/km · One-way Sedan from ₹15/km
               </p>
             </div>
 
@@ -286,14 +271,14 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                 {activeTab === 'outstation' && (
                   <div className="p-3 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-[#D5CEBE]">
                     <span className="font-bold text-[#FFBF00]">Outstation Tariff: </span>
-                    Sedan ₹15/km · SUV ₹20/km · Crysta ₹23/km · Min 250 km coverage · Driver batta ₹500/day · Ooty starting ₹3,000 · Hill charges (SUV +₹400, Crysta +₹600).
+                    Round trip: ₹2,000/day + ₹12/km, minimum 100 km/day (Ooty 2-day example: 250 km coverage). One-way: Sedan ₹15/km + ₹500 driver allowance; SUV ₹22/km + ₹600 driver allowance, minimum 130 km. Premium vehicles: contact for quote.
                   </div>
                 )}
 
                 {activeTab === 'hourly' && (
                   <div className="p-3 rounded-xl bg-neutral-950 border border-neutral-800 text-xs text-[#D5CEBE]">
                     <span className="font-bold text-[#FFBF00]">Hourly Rental Package: </span>
-                    ₹375/hour for first 3 hours, after that ₹350/hour basis. Vehicle &amp; chauffeur on standby for multiple shopping or business stops.
+                    Sedan ₹350/hour or SUV ₹500/hour. Includes 10 km per hour; extra distance ₹20/km for Sedan and ₹25/km for SUV. Premium vehicles are quote-only.
                   </div>
                 )}
 
@@ -408,7 +393,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                       <div>
                         <label htmlFor="trip-days-input" className="block text-xs font-bold text-white mb-1 flex items-center gap-1.5">
                           <RotateCcw className="w-3.5 h-3.5 text-[#FFBF00]" />
-                          Trip Days (Min 250 km/day)
+                          Trip Days (Min 100 km/day)
                         </label>
                         <select
                           id="trip-days-input"
@@ -431,7 +416,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                   <div>
                     <label htmlFor="rental-hours-select" className="block text-xs font-bold text-white mb-1.5 flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#FFBF00]" />
-                      Select Rental Duration (First 3 hrs @ ₹375/hr, then ₹350/hr)
+                      Select Rental Duration
                     </label>
                     <select
                       id="rental-hours-select"
@@ -439,12 +424,12 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                       onChange={(e) => setRentalHours(Number(e.target.value))}
                       className="w-full bg-white text-[#171717] border border-[#E5E0D8] rounded-xl px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#FFBF00]"
                     >
-                      <option value={2}>2 Hours (₹750 base) — Quick doctor visits &amp; errands</option>
-                      <option value={3}>3 Hours (₹1,125 base) — Multi-stop city shopping</option>
-                      <option value={4}>4 Hours (₹1,475 base) — Cross Cut Road &amp; meetings</option>
-                      <option value={6}>6 Hours (₹2,175 base) — Half-day factory / temple visit</option>
-                      <option value={8}>8 Hours (₹2,875 base) — Full-day Coimbatore business</option>
-                      <option value={12}>12 Hours (₹4,275 base) — Comprehensive city &amp; suburban trip</option>
+                      <option value={2}>2 Hours</option>
+                      <option value={3}>3 Hours</option>
+                      <option value={4}>4 Hours</option>
+                      <option value={6}>6 Hours</option>
+                      <option value={8}>8 Hours</option>
+                      <option value={12}>12 Hours</option>
                     </select>
                   </div>
                 )}
@@ -555,7 +540,7 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                             {activeTab === 'local' ? (
                               <span>Standard AC Fare</span>
                             ) : (
-                              <span>₹{v.ratePerKm}/km outstation</span>
+                              <span>{v.id === 'premium_suv' ? 'Contact for quote' : activeTab === 'outstation' ? (activeDest && 'One-way / round-trip tariff') : 'Standard fare'}</span>
                             )}
                           </div>
                         </button>
@@ -582,14 +567,14 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                 <div>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl sm:text-4xl font-black text-[#171717] font-heading tabular-nums">
-                      ₹{estimatedPrice.toLocaleString('en-IN')}
+                      {vehicle.id === 'premium_suv' ? 'Contact for quote' : '₹' + estimatedPrice.toLocaleString('en-IN')}
                     </span>
                     <span className="text-xs text-[#777777] font-medium">
                       (estimated)
                     </span>
                   </div>
                   <p className="text-xs text-[#777777] mt-1.5 font-medium leading-relaxed">
-                    {breakdownNote}
+                    {vehicle.id === 'premium_suv' ? 'Contact us for a vehicle-specific quote.' : activeTab === 'outstation' ? (tripDays + ' day' + (tripDays > 1 ? 's' : '') + ' · ' + distanceDisplay + ' km minimum-billed distance') : activeTab === 'hourly' ? 'Includes 10 km per hour. Extra distance: ' + (vehicle.id === 'suv_ertiga' ? '₹25/km' : '₹20/km') + '.' : activeTab === 'local' ? 'Estimated final fare for your selected trip.' : 'Estimated final fare for your selected airport route.'}
                   </p>
                 </div>
 
@@ -604,19 +589,9 @@ export const FareCalculator: React.FC<FareCalculatorProps> = ({
                     <span className="text-[#171717]">{vehicle.capacity} · {vehicle.luggage}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Driver Batta:</span>
-                    <span className="text-[#171717] tabular-nums font-semibold">
-                      {activeTab === 'outstation' ? `₹500 / day` : 'Included'}
-                    </span>
+                    <span>Fare display:</span>
+                    <span className="text-[#171717] tabular-nums font-semibold">Final estimate only</span>
                   </div>
-                  {activeTab === 'outstation' && activeDest.isHill && (
-                    <div className="flex justify-between text-[#171717] font-semibold">
-                      <span>Hill Station Charge:</span>
-                      <span>
-                        {vehicle.id === 'sedan' ? 'Included' : vehicle.id === 'suv_ertiga' ? '+₹400' : '+₹600'}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between">
                     <span>Tolls / Parking:</span>
                     <span className="text-[#777777]">At actuals as per slip</span>

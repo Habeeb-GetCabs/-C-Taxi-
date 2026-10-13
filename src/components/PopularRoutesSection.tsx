@@ -1,7 +1,6 @@
 import React from 'react';
 import { Clock, MapPin, ArrowRight, Shield, Mountain } from 'lucide-react';
 import { POPULAR_ROUTES, WHATSAPP_URL, PHONE_NUMBER } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface PopularRoutesProps {
   onSelectRoute: (route: any) => void;
@@ -43,7 +42,7 @@ export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({
               Popular Outstation &amp; Airport Routes
             </h2>
             <p className="text-sm sm:text-base text-[#777777]">
-              Ooty trips from ₹3,000. All journeys driven by experienced commercial chauffeurs with clean AC Sedans and SUVs.
+              Choose a destination and get a trip estimate. Final fare is shown without a line-by-line breakdown; premium vehicle fares are available on request.
             </p>
           </div>
 
@@ -73,7 +72,7 @@ export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({
                   {/* Photo Thumbnail Header */}
                   <div className="relative h-40 w-full overflow-hidden">
                     <img 
-                      src={assetUrl(photoUrl)} 
+                      src={photoUrl} 
                       alt={route.to}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"
@@ -117,10 +116,10 @@ export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({
                   <div className="pt-3 border-t border-[#E5E0D8] flex items-center justify-between">
                     <div>
                       <span className="text-[10px] text-[#777777] uppercase tracking-wider block font-bold">
-                        Starting Fare
+                        Fare Estimate
                       </span>
                       <div className="text-xl sm:text-2xl font-black text-[#171717] font-heading tabular-nums">
-                        ₹{route.startingPrice.toLocaleString('en-IN')}
+                        Get quote
                       </div>
                     </div>
 

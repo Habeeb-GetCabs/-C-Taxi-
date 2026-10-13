@@ -221,7 +221,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({
                 <div>
                   <h5 className="font-bold text-[#171717] mb-1">2. Transparent Fare Structure</h5>
                   <p>
-                    Fares are calculated based on approved business tariffs: Local Sedan (₹100 base + ₹28/km), Local SUV (₹100 base + ₹35/km), Premium SUV (₹150 base + ₹45/km). Outstation trips are billed at ₹15/km (Sedan), ₹20/km (SUV), or ₹23/km (Crysta) with a 250 km/day minimum and ₹500/day driver batta.
+                    Local Sedan/SUV fares are ₹100 base + ₹30/km. Outstation round trips use ₹2,000/day + ₹12/km with minimum 100 km/day. One-way Sedan is ₹15/km + ₹500 driver allowance and one-way SUV is ₹22/km + ₹600 driver allowance, minimum 130 km. Hourly rental is ₹350/hour for Sedan and ₹500/hour for SUV, including 10 km/hour; extra distance is ₹20/km for Sedan and ₹25/km for SUV. Innova Crysta and Tempo Traveller are quote-only.
                   </p>
                 </div>
 

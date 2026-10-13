@@ -14,7 +14,6 @@ import {
   Shield
 } from 'lucide-react';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface HeroProps {
   onNavigate: (page: string) => void;
@@ -53,7 +52,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenBookingModal }) =>
 
             {/* Sub-headline */}
             <p className="text-sm sm:text-base lg:text-lg text-[#D5CEBE] max-w-2xl leading-relaxed">
-              Doorstep AC cabs across Kovai in 15 minutes. Ooty hill trips from <strong className="text-white font-bold">₹3,000</strong>, outstation travel from <strong className="text-white font-bold">₹15/km</strong>, and CJB airport transfers with zero peak-hour surge.
+              Book clean AC cabs across Kovai for local rides, outstation round trips, one-way drops and CJB airport transfers. See a final fare estimate before requesting your cab.
             </p>
 
             {/* Direct High-Contrast Action Triggers */}
@@ -85,11 +84,11 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenBookingModal }) =>
               </div>
               <div className="flex items-center gap-2 text-[#E5E0D8]">
                 <CheckCircle className="w-4 h-4 text-[#FFBF00] shrink-0" />
-                <span>Ooty from ₹3,000</span>
+                <span>Outstation fare estimates</span>
               </div>
               <div className="flex items-center gap-2 text-[#E5E0D8]">
                 <CheckCircle className="w-4 h-4 text-[#FFBF00] shrink-0" />
-                <span>Outstation ₹15/km</span>
+                <span>One-way Sedan ₹15/km</span>
               </div>
               <div className="flex items-center gap-2 text-[#E5E0D8]">
                 <CheckCircle className="w-4 h-4 text-[#FFBF00] shrink-0" />
@@ -106,7 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenBookingModal }) =>
               {/* Rich Chauffeur / Automotive Image */}
               <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden">
                 <img 
-                  src={assetUrl('/images/fleet/home-hero-fleet.webp')}
+                  src="/images/fleet/home-hero-fleet.webp"
                   alt="C Taxi premium Toyota Innova Crysta and AC sedan fleet in Coimbatore"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="eager"

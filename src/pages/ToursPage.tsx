@@ -16,7 +16,6 @@ import {
 import { TOUR_PACKAGES, TourPackage } from '../data/toursData';
 import { TourCardVisual } from '../components/TourCardVisual';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface ToursPageProps {
   onNavigateToTour: (slug: string) => void;
@@ -67,7 +66,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
               </h1>
 
               <p className="text-sm sm:text-base text-[#D5CEBE] leading-relaxed max-w-2xl">
-                Explore the mist of the Nilgiris, sacred Murugan shrines, and Siruvani waterfalls with dedicated commercial AC cabs. Chauffeurs certified for mountain hairpins, transparent package fares from <strong className="text-white font-bold">₹3,000</strong>, and doorstep pickup.
+                Explore the mist of the Nilgiris, sacred Murugan shrines, and Siruvani waterfalls with dedicated commercial AC cabs. Chauffeurs certified for mountain hairpins, clear trip estimates and doorstep pickup. Please request a quote for a package-specific fare.
               </p>
 
               {/* Action Buttons */}
@@ -117,7 +116,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
               <div className="relative rounded-2xl overflow-hidden border border-neutral-750 bg-neutral-900 shadow-xl group">
                 <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden">
                   <img 
-                    src={assetUrl('/images/destinations/tour-coonoor-tea.webp')}
+                    src="/images/destinations/tour-coonoor-tea.webp"
                     alt="Nilgiri tea plantations, misty valleys, and mountain roads near Coonoor and Ooty"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="eager"
@@ -144,7 +143,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
                       </div>
                       <div className="text-right">
                         <span className="text-[10px] text-[#A0A09C] block">From</span>
-                        <span className="text-lg font-black text-[#FFBF00] font-heading">₹3,000</span>
+                        <span className="text-sm font-black text-[#FFBF00] font-heading">Request quote</span>
                       </div>
                     </div>
                   </div>
@@ -225,15 +224,15 @@ export const ToursPage: React.FC<ToursPageProps> = ({
                       <div className="text-[11px] font-bold text-[#171717]">Package Vehicle Tariffs:</div>
                       <div className="flex justify-between text-[#777777]">
                         <span>Prime Sedan (4 Pax):</span>
-                        <span className="font-bold text-[#171717]">₹{tour.sedanPrice.toLocaleString('en-IN')}</span>
+                        <span className="font-bold text-[#171717]">Request quote</span>
                       </div>
                       <div className="flex justify-between text-[#777777]">
                         <span>Ertiga SUV (6 Pax):</span>
-                        <span className="font-bold text-[#171717]">₹{tour.suvPrice.toLocaleString('en-IN')}</span>
+                        <span className="font-bold text-[#171717]">Request quote</span>
                       </div>
                       <div className="flex justify-between text-[#777777]">
                         <span>Innova Crysta (7 Pax):</span>
-                        <span className="font-bold text-[#171717]">₹{tour.crystaPrice.toLocaleString('en-IN')}</span>
+                        <span className="font-bold text-[#171717]">Contact for quote</span>
                       </div>
                     </div>
 
@@ -246,7 +245,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
                     <div>
                       <span className="text-[10px] text-[#777777] block uppercase font-bold tracking-wider">Starting Rate</span>
                       <span className="text-2xl font-black text-[#171717] font-heading">
-                        ₹{tour.startingPrice.toLocaleString('en-IN')}
+                        Request quote
                       </span>
                     </div>
                     <button

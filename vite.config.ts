@@ -4,13 +4,7 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
-  // Support GitHub Pages subpath (/-C-Taxi-/) during GitHub Actions builds,
-  // while preserving root base path for local development and custom domains.
-  const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-  const base = process.env.VITE_BASE_PATH || (isGitHubActions ? '/-C-Taxi-/' : './');
-
   return {
-    base,
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

@@ -23,7 +23,6 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface LocalTaxiPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -31,9 +30,9 @@ interface LocalTaxiPageProps {
 }
 
 const FLEET_PHOTOS: Record<string, string> = {
-  'sedan': assetUrl('/images/fleet/fleet-prime-sedan.webp'),
-  'suv_ertiga': assetUrl('/images/fleet/fleet-family-suv.webp'),
-  'premium_suv': assetUrl('/images/fleet/fleet-innova-crysta.webp')
+  'sedan': '/images/fleet/fleet-prime-sedan.webp',
+  'suv_ertiga': '/images/fleet/fleet-family-suv.webp',
+  'premium_suv': '/images/fleet/fleet-innova-crysta.webp'
 };
 
 export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal, onNavigate }) => {
@@ -46,11 +45,9 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
   const vehicle = VEHICLE_FLEET.find(v => v.id === selectedVehicleId) || VEHICLE_FLEET[0];
 
   // Approved formula calculated internally:
-  // Sedan: 100 base + (km * 28)
-  // SUV: 100 base + (km * 35)
-  // Premium SUV: 150 base + (km * 45)
+  // Sedan/SUV: ₹100 base + ₹30/km. Premium SUV is quote-only.
   // Revealed to user as total estimated trip fare (no raw basefare/km breakdown formula)
-  const estimatedFare = vehicle.localBaseFare + (distanceKm * vehicle.localPerKm);
+  const estimatedFare = vehicle.id === 'premium_suv' ? null : vehicle.localBaseFare + (distanceKm * vehicle.localPerKm);
 
   const handleBookNow = () => {
     onOpenBookingModal({
@@ -71,7 +68,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
       pickup: 'Coimbatore (Doorstep)',
       drop: `Hourly Rental: ${pkgTitle}`,
       vehicle: vehicle.name,
-      estimatedPrice: vehicle.id === 'sedan' ? priceSedan : Math.round(priceSedan * 1.35),
+      estimatedPrice: vehicle.id === 'premium_suv' ? null : vehicle.id === 'sedan' ? hours * 350 : hours * 500,
       date: new Date().toISOString().split('T')[0],
       time: 'As Scheduled',
       breakdownNote: `Hourly Package: ${hours} Hours / ${kms} Km included · Driver on standby`
@@ -79,10 +76,10 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
   };
 
   const HOURLY_PACKAGES = [
-    { title: '2 Hours / 20 Km', hours: 2, kms: 20, sedanPrice: 750, suvPrice: 1050, note: 'Quick shopping & hospital visit' },
-    { title: '4 Hours / 40 Km', hours: 4, kms: 40, sedanPrice: 1400, suvPrice: 1900, note: 'Half-day city meetings & errands' },
-    { title: '8 Hours / 80 Km', hours: 8, kms: 80, sedanPrice: 2600, suvPrice: 3500, note: 'Full-day Kovai shopping & multiple stops' },
-    { title: '12 Hours / 120 Km', hours: 12, kms: 120, sedanPrice: 3800, suvPrice: 4900, note: 'Extended business & city-wide itinerary' }
+    { title: '2 Hours / 20 Km', hours: 2, kms: 20, sedanPrice: 700, suvPrice: 1000, note: 'Quick shopping & hospital visit' },
+    { title: '4 Hours / 40 Km', hours: 4, kms: 40, sedanPrice: 1400, suvPrice: 2000, note: 'Half-day city meetings & errands' },
+    { title: '8 Hours / 80 Km', hours: 8, kms: 80, sedanPrice: 2800, suvPrice: 4000, note: 'Full-day Kovai shopping & multiple stops' },
+    { title: '12 Hours / 120 Km', hours: 12, kms: 120, sedanPrice: 4200, suvPrice: 6000, note: 'Extended business & city-wide itinerary' }
   ];
 
   const localFaqs = [
@@ -96,7 +93,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
     },
     {
       q: "Can I book a local cab for multiple stops across Coimbatore?",
-      a: "Yes! If you have multiple stops (e.g. shopping on Cross Cut Road, medical checkups, or business meetings), you can book either point-to-point local rides or choose our convenient Hourly Rental packages starting at ₹750."
+      a: "Yes! If you have multiple stops (e.g. shopping on Cross Cut Road, medical checkups, or business meetings), you can book either point-to-point local rides or choose our convenient Hourly Rental packages at ₹350/hour for Sedan and ₹500/hour for SUV."
     },
     {
       q: "Are all local cabs air-conditioned?",
@@ -193,7 +190,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
               {/* Large, attractive commercial taxi photograph below the benefits */}
               <div className="relative h-32 sm:h-36 lg:h-40 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src={assetUrl('/images/fleet/local-taxi-hero.webp')}
+                  src="/images/fleet/local-taxi-hero.webp"
                   alt="C Taxi premium commercial AC city taxi fleet in Coimbatore"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -314,7 +311,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
                     <div>
                       <span className="text-[11px] text-[#A0A09C] block">Estimated City Ride Fare:</span>
                       <div className="text-2xl font-black text-[#FFBF00] font-heading">
-                        ₹{estimatedFare.toLocaleString('en-IN')}
+                        {estimatedFare == null ? 'Contact for quote' : '₹' + estimatedFare.toLocaleString('en-IN')}
                       </div>
                     </div>
                     <div className="text-right">
@@ -366,7 +363,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#777777] max-w-md">
-              Need a car on standby for shopping, multiple client visits, or doctor checkups? Book flexible hourly packages.
+              Sedan ₹350/hour or SUV ₹500/hour. Includes 10 km per hour; extra distance is ₹20/km for Sedan and ₹25/km for SUV. Premium vehicles are quote-only.
             </p>
           </div>
 

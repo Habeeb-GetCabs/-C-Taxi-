@@ -35,13 +35,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigate }) 
     {
       id: 'outstation-cabs',
       title: 'Outstation Cabs & Drops',
-      badge: 'From ₹15 / km',
+      badge: 'Fare calculator',
       tagline: 'Comfortable intercity travel across Tamil Nadu, Kerala & Karnataka with mountain drivers.',
-      priceHighlight: 'Sedan ₹15/km · SUV ₹20/km',
+      priceHighlight: 'Round trip & one-way fares',
       points: [
-        'Ooty hill station trips starting from ₹3,000',
-        'One-way drops (min 130 km) & round trips (min 250 km/day)',
-        'Flat ₹500/day driver batta & certified mountain safety'
+        'Round trips: ₹2,000/day + ₹12/km; minimum 100 km/day',
+        'One-way minimum 130 km: Sedan ₹15/km + ₹500; SUV ₹22/km + ₹600',
+        'Crysta and Tempo Traveller fares available on request'
       ],
       icon: Mountain,
       cta: 'Explore Outstation'
@@ -63,12 +63,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onNavigate }) 
     {
       id: 'tours',
       title: 'Holiday Tours & Packages',
-      badge: 'From ₹2,200',
+      badge: 'Ask for package fare',
       tagline: 'Curated 1 to 3 day sightseeing circuits with dedicated vehicle, fuel, and seasoned chauffeurs.',
       priceHighlight: 'All 5 Signature Circuits',
       points: [
-        'Ooty, Coonoor & Kotagiri Nilgiri Hills Tour (from ₹3,000)',
-        'Marudhamalai, Isha Yoga & Kovai Kutralam (from ₹2,200)',
+        'Ooty, Coonoor & Kotagiri Nilgiri Hills Tour',
+        'Marudhamalai, Isha Yoga & Kovai Kutralam — request a quote',
         'Palani Murugan Pilgrimage, Valparai & Kodaikanal'
       ],
       icon: Clock,
