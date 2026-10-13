@@ -105,7 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onOpenBookingModal }) =>
               {/* Rich Chauffeur / Automotive Image */}
               <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden">
                 <img 
-                  src="/images/fleet/innova-crysta.jpg"
+                  src="/images/fleet/home-hero-fleet.webp"
                   alt="C Taxi premium Toyota Innova Crysta and AC sedan fleet in Coimbatore"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   loading="eager"

@@ -8,9 +8,9 @@ interface FleetSectionProps {
 }
 
 const FLEET_PHOTOS: Record<string, string> = {
-  'sedan': '/images/fleet/coimbatore-city-taxi.jpg',
-  'suv_ertiga': '/images/fleet/ertiga-suv.jpg',
-  'premium_suv': '/images/fleet/innova-crysta.jpg'
+  'sedan': '/images/fleet/fleet-prime-sedan.webp',
+  'suv_ertiga': '/images/fleet/fleet-family-suv.webp',
+  'premium_suv': '/images/fleet/fleet-innova-crysta.webp'
 };
 
 export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectFleet, onNavigateToBooking }) => {

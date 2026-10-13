@@ -116,7 +116,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
               <div className="relative rounded-2xl overflow-hidden border border-neutral-750 bg-neutral-900 shadow-xl group">
                 <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden">
                   <img 
-                    src="/images/destinations/coonoor.jpg"
+                    src="/images/destinations/tour-coonoor-tea.webp"
                     alt="Nilgiri tea plantations, misty valleys, and mountain roads near Coonoor and Ooty"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="eager"

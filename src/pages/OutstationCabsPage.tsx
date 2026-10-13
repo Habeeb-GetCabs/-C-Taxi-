@@ -35,7 +35,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Ooty',
     tag: 'Queen of Hills · Top Choice',
     distanceText: '88 km · 2h 45m',
-    image: '/images/destinations/ooty-lake.jpg',
+    image: '/images/destinations/tour-ooty-lake.webp',
     desc: 'Via Mettupalayam & Nilgiri 36 Kalhatty hairpins. Botanical garden & tea estates.',
     price: 3000,
     priceLabel: 'Starting From',
@@ -46,7 +46,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Coonoor',
     tag: 'Tea Estates & Sim\'s Park',
     distanceText: '72 km · 2h 15m',
-    image: '/images/destinations/coonoor.jpg',
+    image: '/images/destinations/tour-coonoor-tea.webp',
     desc: 'Sim\'s Park, Dolphin\'s Nose & Lamb\'s Rock with scenic Nilgiri tea plantation stops.',
     price: 2800,
     priceLabel: 'Sedan Starting',
@@ -57,7 +57,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Valparai',
     tag: '40 Hairpin Curves · Wildlife',
     distanceText: '105 km · 3h 30m',
-    image: '/images/destinations/valparai.jpg',
+    image: '/images/destinations/tour-valparai-hairpins.webp',
     desc: 'Aliyar Dam, Loam\'s View & Sholayar reservoir through pristine Anamalai rainforest.',
     price: 3600,
     priceLabel: 'Package Starting',
@@ -68,7 +68,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Kodaikanal',
     tag: 'Princess of Hill Stations',
     distanceText: '172 km · 4h 30m',
-    image: '/images/destinations/kodaikanal-lake.jpg',
+    image: '/images/destinations/tour-kodaikanal-lake.webp',
     desc: 'Silver Cascade, Kodai Lake boating, Coaker\'s Walk & pine forest drives.',
     price: 4900,
     priceLabel: 'Round Trip From',
@@ -79,7 +79,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Palani',
     tag: 'Sacred Hill Pilgrimage',
     distanceText: '105 km · 2h 30m',
-    image: '/images/destinations/palani.jpg',
+    image: '/images/destinations/tour-palani-temple.webp',
     desc: 'Fast-track darshan transfer to Arulmigu Dhandayuthapani Swamy Temple.',
     price: 2900,
     priceLabel: 'Sedan From',
@@ -90,7 +90,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Isha Yoga',
     tag: '112ft Adiyogi & Dhyanalinga',
     distanceText: '32 km · 1h 00m',
-    image: '/images/destinations/adiyogi-isha.jpg',
+    image: '/images/destinations/tour-isha-adiyogi.webp',
     desc: 'Velliangiri foothills. Evening 3D laser projection & consecrated spaces.',
     price: 1400,
     priceLabel: 'Return Fare',
@@ -101,7 +101,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Kotagiri',
     tag: 'Scenic Nilgiri Tea Valleys',
     distanceText: '71 km · 2h 10m',
-    image: '/images/destinations/kotagiri.jpg',
+    image: '/images/destinations/tour-kotagiri-kodanad.webp',
     desc: 'Quieter tea hill haven, Kodanad viewpoint panorama & Catherine falls.',
     price: 2900,
     priceLabel: 'Sedan From',
@@ -112,7 +112,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Topslip & Pollachi',
     tag: 'Anamalai Reserve & Groves',
     distanceText: '45 km · 1h 10m',
-    image: '/images/destinations/topslip.jpg',
+    image: '/images/destinations/tour-pollachi-topslip.webp',
     desc: 'Anamalai Tiger Reserve safari, elephant camp & lush coconut highways.',
     price: 1250,
     priceLabel: 'Round Trip From',
@@ -123,7 +123,7 @@ const DESTINATION_CARDS_DATA = [
     name: 'Coimbatore to Tiruppur',
     tag: 'Textile Hub Express Transit',
     distanceText: '54 km · 1h 10m',
-    image: '/images/destinations/tiruppur.jpg',
+    image: '/images/destinations/transit-tiruppur-expressway.webp',
     desc: 'Direct industrial corridor transfer via 4-lane Avinashi highway.',
     price: 1350,
     priceLabel: 'One-Way From',
@@ -293,7 +293,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
               {/* Scenic Highway Banner */}
               <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src="/images/destinations/valparai.jpg"
+                  src="/images/destinations/tour-valparai-hairpins.webp"
                   alt="Scenic mountain highway in Western Ghats and Nilgiri tea hills"
                   className="w-full h-full object-cover"
                   loading="eager"

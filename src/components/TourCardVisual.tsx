@@ -17,43 +17,43 @@ interface TourPhotoConfig {
 
 const TOUR_PHOTOS: Record<string, TourPhotoConfig> = {
   'ooty-coonoor-kotagiri': {
-    image: '/images/destinations/ooty-lake.jpg',
+    image: '/images/destinations/tour-ooty-lake.webp',
     tag: 'Nilgiri Hills · 36 Hairpin Certified',
     altitude: '2,240m',
     alt: 'Ooty Lake and Nilgiri Mountain Range'
   },
   'marudhamalai-isha-kovai-kutralam': {
-    image: '/images/destinations/adiyogi-isha.jpg',
+    image: '/images/destinations/tour-isha-adiyogi.webp',
     tag: 'Spiritual & Western Ghats Circuit',
     altitude: 'Adiyogi 112ft',
     alt: '112ft Adiyogi Shiva Statue at Isha Yoga Center Coimbatore'
   },
   'palani-temple-pilgrimage': {
-    image: '/images/destinations/palani.jpg',
+    image: '/images/destinations/tour-palani-temple.webp',
     tag: 'Sacred Hill Pilgrimage & Fast-Track Darshan',
     altitude: 'Dhandayuthapani',
     alt: 'Palani Dhandayuthapani Swamy Hill Temple'
   },
   'valparai-topslip-safari': {
-    image: '/images/destinations/valparai.jpg',
+    image: '/images/destinations/tour-valparai-hairpins.webp',
     tag: 'Anamalai Rainforest · 40 Hairpin Bends',
     altitude: '1,193m',
     alt: 'Valparai Tea Plantations and Ghat Hairpins'
   },
   'valparai-pollachi-topslip': {
-    image: '/images/destinations/valparai.jpg',
+    image: '/images/destinations/tour-valparai-hairpins.webp',
     tag: 'Anamalai Rainforest · 40 Hairpin Bends',
     altitude: '1,193m',
     alt: 'Valparai Tea Plantations and Ghat Hairpins'
   },
   'kodaikanal-hills': {
-    image: '/images/destinations/kodaikanal-lake.jpg',
+    image: '/images/destinations/tour-kodaikanal-lake.webp',
     tag: 'Palani Hills · Princess of Hill Stations',
     altitude: '2,133m',
     alt: 'Star-shaped Kodaikanal Lake and Misty Pine Forests'
   },
   'kodaikanal-princess-hills': {
-    image: '/images/destinations/kodaikanal-lake.jpg',
+    image: '/images/destinations/tour-kodaikanal-lake.webp',
     tag: 'Palani Hills · Princess of Hill Stations',
     altitude: '2,133m',
     alt: 'Star-shaped Kodaikanal Lake and Misty Pine Forests'
@@ -64,7 +64,7 @@ export const TourCardVisual: React.FC<TourCardVisualProps> = ({ slug, title, bad
   const [imageError, setImageError] = useState(false);
 
   const photoData = TOUR_PHOTOS[slug] || {
-    image: '/images/destinations/ooty-lake.jpg',
+    image: '/images/destinations/tour-ooty-lake.webp',
     tag: 'Hill & Sightseeing Circuit',
     altitude: 'Western Ghats',
     alt: title

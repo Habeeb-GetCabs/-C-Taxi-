@@ -9,19 +9,19 @@ interface PopularRoutesProps {
 
 const ROUTE_IMAGES: Record<string, string> = {
   // Primary popular routes matching taxiData.ts POPULAR_ROUTES IDs
-  'cbe_ooty': '/images/destinations/ooty-lake.jpg',
-  'cbe_airport': '/images/destinations/cjb-airport-terminal.jpg',
-  'cbe_isha': '/images/destinations/adiyogi-isha.jpg',
-  'cbe_tiruppur': '/images/destinations/tiruppur.jpg',
-  'cbe_pollachi': '/images/destinations/topslip.jpg',
-  'cbe_valparai': '/images/destinations/valparai.jpg',
+  'cbe_ooty': '/images/destinations/tour-ooty-lake.webp',
+  'cbe_airport': '/images/destinations/airport-cjb-terminal.webp',
+  'cbe_isha': '/images/destinations/tour-isha-adiyogi.webp',
+  'cbe_tiruppur': '/images/destinations/transit-tiruppur-expressway.webp',
+  'cbe_pollachi': '/images/destinations/tour-pollachi-topslip.webp',
+  'cbe_valparai': '/images/destinations/tour-valparai-hairpins.webp',
   // Sitelink aliases
-  'route-ooty': '/images/destinations/ooty-lake.jpg',
-  'route-coonoor': '/images/destinations/coonoor.jpg',
-  'route-valparai': '/images/destinations/valparai.jpg',
-  'route-kodaikanal': '/images/destinations/kodaikanal-lake.jpg',
-  'route-palani': '/images/destinations/palani.jpg',
-  'route-cjb-airport': '/images/destinations/cjb-airport-terminal.jpg'
+  'route-ooty': '/images/destinations/tour-ooty-lake.webp',
+  'route-coonoor': '/images/destinations/tour-coonoor-tea.webp',
+  'route-valparai': '/images/destinations/tour-valparai-hairpins.webp',
+  'route-kodaikanal': '/images/destinations/tour-kodaikanal-lake.webp',
+  'route-palani': '/images/destinations/tour-palani-temple.webp',
+  'route-cjb-airport': '/images/destinations/airport-cjb-terminal.webp'
 };
 
 export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({ 
@@ -61,7 +61,7 @@ export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({
         {/* Image-Led Route Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {POPULAR_ROUTES.map((route) => {
-            const photoUrl = ROUTE_IMAGES[route.id] || '/images/destinations/ooty-lake.jpg';
+            const photoUrl = ROUTE_IMAGES[route.id] || '/images/destinations/tour-ooty-lake.webp';
             return (
               <div
                 key={route.id}

@@ -30,33 +30,33 @@ interface TourDetailPageProps {
 
 const TOUR_GALLERY_PHOTOS: Record<string, Array<{ name: string; image: string; tag: string }>> = {
   'ooty-coonoor-kotagiri': [
-    { name: 'Ooty Lake & Boathouse', image: '/images/destinations/ooty-lake.jpg', tag: 'Nilgiri Scenic Boating' },
-    { name: 'Coonoor Tea Plantations & Sim\'s Park', image: '/images/destinations/coonoor.jpg', tag: 'Emerald Tea Gardens' },
-    { name: 'Kotagiri Kodanad Valley Viewpoint', image: '/images/destinations/kotagiri.jpg', tag: 'Eastern Slope Panorama' }
+    { name: 'Ooty Lake & Boathouse', image: '/images/destinations/tour-ooty-lake.webp', tag: 'Nilgiri Scenic Boating' },
+    { name: 'Coonoor Tea Plantations & Sim\'s Park', image: '/images/destinations/tour-coonoor-tea.webp', tag: 'Emerald Tea Gardens' },
+    { name: 'Kotagiri Kodanad Valley Viewpoint', image: '/images/destinations/tour-kotagiri-kodanad.webp', tag: 'Eastern Slope Panorama' }
   ],
   'marudhamalai-isha-kovai-kutralam': [
-    { name: 'Isha Yoga Center (112ft Adiyogi)', image: '/images/destinations/adiyogi-isha.jpg', tag: 'Consecrated Energy Center' },
-    { name: 'Marudhamalai Murugan Hill Temple', image: '/images/destinations/marudhamalai.jpg', tag: '12th-Century Hill Shrine' }
+    { name: 'Isha Yoga Center (112ft Adiyogi)', image: '/images/destinations/tour-isha-adiyogi.webp', tag: 'Consecrated Energy Center' },
+    { name: 'Marudhamalai Murugan Hill Temple', image: '/images/destinations/tour-marudhamalai.webp', tag: '12th-Century Hill Shrine' }
   ],
   'palani-temple-pilgrimage': [
-    { name: 'Palani Dhandayuthapani Swamy Temple', image: '/images/destinations/palani.jpg', tag: 'Holy Hilltop Sanctum' },
-    { name: 'Palani Adivaaram Winch & Ropeway Base', image: '/images/destinations/palani-adivaaram.jpg', tag: 'Foot of Sivagiri Hill' }
+    { name: 'Palani Dhandayuthapani Swamy Temple', image: '/images/destinations/tour-palani-temple.webp', tag: 'Holy Hilltop Sanctum' },
+    { name: 'Palani Adivaaram Winch & Ropeway Base', image: '/images/destinations/tour-palani-adivaaram.webp', tag: 'Foot of Sivagiri Hill' }
   ],
   'valparai-topslip-safari': [
-    { name: 'Valparai 40 Hairpins & Tea Estates', image: '/images/destinations/valparai.jpg', tag: 'Western Ghats Rainforest' },
-    { name: 'Topslip Anamalai Wildlife Sanctuary', image: '/images/destinations/topslip.jpg', tag: 'Elephant Camp & Jungle Safari' }
+    { name: 'Valparai 40 Hairpins & Tea Estates', image: '/images/destinations/tour-valparai-hairpins.webp', tag: 'Western Ghats Rainforest' },
+    { name: 'Topslip Anamalai Wildlife Sanctuary', image: '/images/destinations/tour-pollachi-topslip.webp', tag: 'Elephant Camp & Jungle Safari' }
   ],
   'valparai-pollachi-topslip': [
-    { name: 'Valparai 40 Hairpins & Tea Estates', image: '/images/destinations/valparai.jpg', tag: 'Western Ghats Rainforest' },
-    { name: 'Topslip Anamalai Wildlife Sanctuary', image: '/images/destinations/topslip.jpg', tag: 'Elephant Camp & Jungle Safari' }
+    { name: 'Valparai 40 Hairpins & Tea Estates', image: '/images/destinations/tour-valparai-hairpins.webp', tag: 'Western Ghats Rainforest' },
+    { name: 'Topslip Anamalai Wildlife Sanctuary', image: '/images/destinations/tour-pollachi-topslip.webp', tag: 'Elephant Camp & Jungle Safari' }
   ],
   'kodaikanal-hills': [
-    { name: 'Kodaikanal Star-Shaped Lake', image: '/images/destinations/kodaikanal-lake.jpg', tag: 'Pedalo Boating & Cycling' },
-    { name: 'Pillar Rocks & Misty Pine Forests', image: '/images/destinations/kodaikanal-pillar.jpg', tag: '400ft Granite Boulders' }
+    { name: 'Kodaikanal Star-Shaped Lake', image: '/images/destinations/tour-kodaikanal-lake.webp', tag: 'Pedalo Boating & Cycling' },
+    { name: 'Pillar Rocks & Misty Pine Forests', image: '/images/destinations/tour-kodaikanal-pillar.webp', tag: '400ft Granite Boulders' }
   ],
   'kodaikanal-princess-hills': [
-    { name: 'Kodaikanal Star-Shaped Lake', image: '/images/destinations/kodaikanal-lake.jpg', tag: 'Pedalo Boating & Cycling' },
-    { name: 'Pillar Rocks & Misty Pine Forests', image: '/images/destinations/kodaikanal-pillar.jpg', tag: '400ft Granite Boulders' }
+    { name: 'Kodaikanal Star-Shaped Lake', image: '/images/destinations/tour-kodaikanal-lake.webp', tag: 'Pedalo Boating & Cycling' },
+    { name: 'Pillar Rocks & Misty Pine Forests', image: '/images/destinations/tour-kodaikanal-pillar.webp', tag: '400ft Granite Boulders' }
   ]
 };
 
