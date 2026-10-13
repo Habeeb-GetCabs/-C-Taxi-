@@ -1,6 +1,7 @@
 import React from 'react';
 import { Clock, MapPin, ArrowRight, Shield, Mountain } from 'lucide-react';
 import { POPULAR_ROUTES, WHATSAPP_URL, PHONE_NUMBER } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface PopularRoutesProps {
   onSelectRoute: (route: any) => void;
@@ -72,7 +73,7 @@ export const PopularRoutesSection: React.FC<PopularRoutesProps> = ({
                   {/* Photo Thumbnail Header */}
                   <div className="relative h-40 w-full overflow-hidden">
                     <img 
-                      src={photoUrl} 
+                      src={assetUrl(photoUrl)} 
                       alt={route.to}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"

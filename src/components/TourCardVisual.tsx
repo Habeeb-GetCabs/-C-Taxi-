@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mountain, MapPin } from 'lucide-react';
+import { assetUrl } from '../utils/assetUrl';
 
 interface TourCardVisualProps {
   slug: string;
@@ -75,7 +76,7 @@ export const TourCardVisual: React.FC<TourCardVisualProps> = ({ slug, title, bad
       {/* Real Destination Photography with Error Fallback */}
       {!imageError ? (
         <img 
-          src={photoData.image} 
+          src={assetUrl(photoData.image)} 
           alt={photoData.alt || title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"

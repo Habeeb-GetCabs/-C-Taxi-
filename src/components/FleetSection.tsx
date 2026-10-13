@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Briefcase, Check, ArrowRight, Mountain } from 'lucide-react';
 import { VEHICLE_FLEET } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface FleetSectionProps {
   onSelectFleet: (vehicleId: string) => void;
@@ -8,9 +9,9 @@ interface FleetSectionProps {
 }
 
 const FLEET_PHOTOS: Record<string, string> = {
-  'sedan': '/images/fleet/fleet-prime-sedan.webp',
-  'suv_ertiga': '/images/fleet/fleet-family-suv.webp',
-  'premium_suv': '/images/fleet/fleet-innova-crysta.webp'
+  'sedan': assetUrl('/images/fleet/fleet-prime-sedan.webp'),
+  'suv_ertiga': assetUrl('/images/fleet/fleet-family-suv.webp'),
+  'premium_suv': assetUrl('/images/fleet/fleet-innova-crysta.webp')
 };
 
 export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectFleet, onNavigateToBooking }) => {

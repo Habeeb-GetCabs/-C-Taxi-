@@ -22,6 +22,7 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface AirportTaxiPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -163,7 +164,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
               {/* Airport Terminal Visual Banner */}
               <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src="/images/destinations/airport-cjb-terminal.webp"
+                  src={assetUrl('/images/destinations/airport-cjb-terminal.webp')}
                   alt="Coimbatore International Airport terminal transfers and pickups"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -386,7 +387,7 @@ export const AirportTaxiPage: React.FC<AirportTaxiPageProps> = ({ onOpenBookingM
           <div className="bg-white rounded-2xl border border-[#E5E0D8] overflow-hidden shadow-xs grid grid-cols-1 md:grid-cols-12 items-center mt-6">
             <div className="md:col-span-5 h-48 sm:h-56 relative overflow-hidden">
               <img 
-                src="/images/destinations/airport-cjb-pickup-bay.webp" 
+                src={assetUrl('/images/destinations/airport-cjb-pickup-bay.webp')} 
                 alt="Coimbatore International Airport terminal road and taxi pickup lane"
                 className="w-full h-full object-cover"
                 loading="lazy"

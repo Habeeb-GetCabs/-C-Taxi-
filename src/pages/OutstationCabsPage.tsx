@@ -24,6 +24,7 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface OutstationCabsPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -293,7 +294,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
               {/* Scenic Highway Banner */}
               <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src="/images/destinations/tour-valparai-hairpins.webp"
+                  src={assetUrl('/images/destinations/tour-valparai-hairpins.webp')}
                   alt="Scenic mountain highway in Western Ghats and Nilgiri tea hills"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -498,7 +499,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                   {/* Photo Header */}
                   <div className="relative h-44 w-full overflow-hidden">
                     <img 
-                      src={card.image} 
+                      src={assetUrl(card.image)} 
                       alt={card.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"

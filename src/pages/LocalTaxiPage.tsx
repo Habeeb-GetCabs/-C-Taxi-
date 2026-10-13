@@ -23,6 +23,7 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface LocalTaxiPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -30,9 +31,9 @@ interface LocalTaxiPageProps {
 }
 
 const FLEET_PHOTOS: Record<string, string> = {
-  'sedan': '/images/fleet/fleet-prime-sedan.webp',
-  'suv_ertiga': '/images/fleet/fleet-family-suv.webp',
-  'premium_suv': '/images/fleet/fleet-innova-crysta.webp'
+  'sedan': assetUrl('/images/fleet/fleet-prime-sedan.webp'),
+  'suv_ertiga': assetUrl('/images/fleet/fleet-family-suv.webp'),
+  'premium_suv': assetUrl('/images/fleet/fleet-innova-crysta.webp')
 };
 
 export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal, onNavigate }) => {
@@ -192,7 +193,7 @@ export const LocalTaxiPage: React.FC<LocalTaxiPageProps> = ({ onOpenBookingModal
               {/* Large, attractive commercial taxi photograph below the benefits */}
               <div className="relative h-32 sm:h-36 lg:h-40 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src="/images/fleet/local-taxi-hero.webp"
+                  src={assetUrl('/images/fleet/local-taxi-hero.webp')}
                   alt="C Taxi premium commercial AC city taxi fleet in Coimbatore"
                   className="w-full h-full object-cover"
                   loading="eager"

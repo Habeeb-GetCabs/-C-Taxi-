@@ -16,6 +16,7 @@ import {
 import { TOUR_PACKAGES, TourPackage } from '../data/toursData';
 import { TourCardVisual } from '../components/TourCardVisual';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface ToursPageProps {
   onNavigateToTour: (slug: string) => void;
@@ -116,7 +117,7 @@ export const ToursPage: React.FC<ToursPageProps> = ({
               <div className="relative rounded-2xl overflow-hidden border border-neutral-750 bg-neutral-900 shadow-xl group">
                 <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden">
                   <img 
-                    src="/images/destinations/tour-coonoor-tea.webp"
+                    src={assetUrl('/images/destinations/tour-coonoor-tea.webp')}
                     alt="Nilgiri tea plantations, misty valleys, and mountain roads near Coonoor and Ooty"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="eager"

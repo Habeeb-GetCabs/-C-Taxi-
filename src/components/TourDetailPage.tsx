@@ -20,6 +20,7 @@ import {
 import { TourPackage, TOUR_PACKAGES } from '../data/toursData';
 import { TourCardVisual } from './TourCardVisual';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
+import { assetUrl } from '../utils/assetUrl';
 
 interface TourDetailPageProps {
   tour: TourPackage;
@@ -250,7 +251,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                     >
                       <div className="relative h-36 w-full overflow-hidden">
                         <img 
-                          src={photo.image} 
+                          src={assetUrl(photo.image)} 
                           alt={photo.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
