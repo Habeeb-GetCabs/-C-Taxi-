@@ -5,126 +5,197 @@
 
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
-import { CampaignBanner } from './components/CampaignBanner';
 import { Hero } from './components/Hero';
-import { FareCalculator } from './components/FareCalculator';
-import { HomeToursSection } from './components/HomeToursSection';
-import { TourDetailPage } from './components/TourDetailPage';
 import { ServicesSection } from './components/ServicesSection';
 import { PopularRoutesSection } from './components/PopularRoutesSection';
+import { HomeToursSection } from './components/HomeToursSection';
 import { FleetSection } from './components/FleetSection';
 import { TrustProofSection } from './components/TrustProofSection';
 import { FaqSection } from './components/FaqSection';
+import { FareCalculator } from './components/FareCalculator';
 import { Footer } from './components/Footer';
 import { StickyBottomCta } from './components/StickyBottomCta';
 import { BookingModal } from './components/BookingModal';
 import { PolicyModal, PolicyType } from './components/PolicyModal';
-import { AD_CAMPAIGN_PRESETS } from './data/taxiData';
+import { TourDetailPage } from './components/TourDetailPage';
+
+// 4 Dedicated Service Pages
+import { LocalTaxiPage } from './pages/LocalTaxiPage';
+import { OutstationCabsPage } from './pages/OutstationCabsPage';
+import { AirportTaxiPage } from './pages/AirportTaxiPage';
+import { ToursPage } from './pages/ToursPage';
+
 import { TOUR_PACKAGES, TourPackage } from './data/toursData';
 
+export type AppRoute = 'home' | 'local-taxi' | 'outstation-cabs' | 'airport-taxi' | 'tours' | 'tour-detail';
+
+const PAGE_META: Record<string, { title: string; desc: string }> = {
+  'home': {
+    title: 'C Taxi · Coimbatore – 24/7 Call Taxi, Airport Transfer & Outstation Cabs',
+    desc: 'Book C Taxi in Coimbatore at 9089223344. Instant 15-min doorstep pickup, local city rides, CJB airport transfers, outstation cabs from ₹15/km & Ooty trips from ₹3,000.'
+  },
+  'local-taxi': {
+    title: 'Coimbatore Local Taxi Service — 24/7 Call Taxi in Kovai | C Taxi',
+    desc: 'Fast 10-15 minute doorstep pickup across Gandhipuram, RS Puram, Peelamedu, Saravanampatti & Coimbatore. Zero surge pricing, clean AC Sedans & SUVs. Call 9089223344.'
+  },
+  'outstation-cabs': {
+    title: 'Outstation Cabs from Coimbatore — One-Way Drops & Ooty from ₹3,000 | C Taxi',
+    desc: 'Book outstation cabs from Coimbatore from ₹15/km for Sedan, ₹20/km for SUV. Ooty starting from ₹3,000. Mountain certified drivers, transparent tariff. Call 9089223344.'
+  },
+  'airport-taxi': {
+    title: 'Coimbatore Airport Taxi (CJB) — 24/7 Terminal Pickup & Drop | C Taxi',
+    desc: 'Punctual Coimbatore International Airport (CJB) taxi transfers with flight tracking and zero delay waiting charges. Clean AC cabs with large luggage boots. Call 9089223344.'
+  },
+  'tours': {
+    title: 'Coimbatore Sightseeing Tours & Holiday Packages | C Taxi',
+    desc: 'Explore Ooty, Coonoor, Isha Yoga Adiyogi, Palani, Valparai & Kodaikanal tour packages from Coimbatore. Dedicated AC vehicles, fuel & mountain certified chauffeurs included.'
+  }
+};
+
 export default function App() {
-  const [currentCampaignId, setCurrentCampaignId] = useState<string>('local');
-  const [activeServiceKey, setActiveServiceKey] = useState<string>('local');
+  const [currentRoute, setCurrentRoute] = useState<AppRoute>('home');
+  const [activeTourSlug, setActiveTourSlug] = useState<string | null>(null);
+
+  // Booking Modal state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState<boolean>(false);
   const [bookingDetails, setBookingDetails] = useState<any>(null);
 
-  // Active Tour Page state for dedicated sitelinks
-  const [activeTourSlug, setActiveTourSlug] = useState<string | null>(null);
-
-  // Policy Modal state for Privacy Policy, Cancellation & Refund, Terms
+  // Policy Modal state
   const [isPolicyModalOpen, setIsPolicyModalOpen] = useState<boolean>(false);
   const [activePolicyType, setActivePolicyType] = useState<PolicyType>('privacy');
 
-  // Sync URL search parameters and path on initial load & popstate
-  useEffect(() => {
-    const parseUrl = () => {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const tourParam = params.get('tour');
-        const pathname = window.location.pathname;
+  // Update browser document head tags for SEO & Google Ads landing page quality
+  const updateHeadTags = (title: string, description: string) => {
+    document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', description);
+    }
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', title);
+    }
+  };
 
-        // Check if landing directly on a tour sitelink
-        if (tourParam) {
-          const matched = TOUR_PACKAGES.find(t => t.slug === tourParam);
-          if (matched) {
-            setActiveTourSlug(matched.slug);
-            document.title = matched.pageTitle;
-            return;
-          }
-        } else if (pathname.startsWith('/tour/')) {
-          const pathSlug = pathname.replace('/tour/', '').replace(/\/$/, '');
-          const matched = TOUR_PACKAGES.find(t => t.slug === pathSlug);
-          if (matched) {
-            setActiveTourSlug(matched.slug);
-            document.title = matched.pageTitle;
-            return;
-          }
+  // Synchronize route based on URL path or search parameters
+  const syncRouteFromUrl = () => {
+    try {
+      const pathname = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+      const searchParams = new URLSearchParams(window.location.search);
+      const pageParam = searchParams.get('page')?.toLowerCase();
+      const tourParam = searchParams.get('tour');
+
+      // 1. Direct Tour Detail Page Check
+      if (tourParam) {
+        const found = TOUR_PACKAGES.find(t => t.slug === tourParam);
+        if (found) {
+          setCurrentRoute('tour-detail');
+          setActiveTourSlug(found.slug);
+          updateHeadTags(found.pageTitle, found.metaDescription);
+          return;
         }
-
-        // Campaign intent matching for Home page
-        const campaignParam = params.get('campaign') || params.get('utm_campaign') || params.get('service');
-        const termParam = params.get('utm_term') || params.get('q');
-
-        if (campaignParam) {
-          const found = AD_CAMPAIGN_PRESETS.find(p => 
-            p.id.toLowerCase() === campaignParam.toLowerCase() ||
-            p.primaryTab.toLowerCase() === campaignParam.toLowerCase()
-          );
+      } else if (pathname.startsWith('/tour/') || pathname.startsWith('/tours/')) {
+        const slug = pathname.replace('/tours/', '').replace('/tour/', '');
+        if (slug) {
+          const found = TOUR_PACKAGES.find(t => t.slug === slug);
           if (found) {
-            setCurrentCampaignId(found.id);
-            setActiveServiceKey(found.primaryTab);
+            setCurrentRoute('tour-detail');
+            setActiveTourSlug(found.slug);
+            updateHeadTags(found.pageTitle, found.metaDescription);
             return;
           }
         }
-
-        if (termParam) {
-          const lower = termParam.toLowerCase();
-          if (lower.includes('airport') || lower.includes('flight') || lower.includes('cjb')) {
-            setCurrentCampaignId('airport');
-            setActiveServiceKey('airport');
-          } else if (lower.includes('ooty') || lower.includes('coonoor') || lower.includes('hill') || lower.includes('valparai') || lower.includes('outstation')) {
-            setCurrentCampaignId('outstation');
-            setActiveServiceKey('outstation');
-          } else if (lower.includes('hourly') || lower.includes('rental') || lower.includes('day package')) {
-            setCurrentCampaignId('hourly');
-            setActiveServiceKey('hourly');
-          } else {
-            setCurrentCampaignId('local');
-            setActiveServiceKey('local');
-          }
-        }
-      } catch {
-        // Ignore URL parsing errors
       }
-    };
 
-    parseUrl();
-    window.addEventListener('popstate', parseUrl);
-    return () => window.removeEventListener('popstate', parseUrl);
+      // 2. Dedicated Service Pages Check
+      let resolvedRoute: AppRoute = 'home';
+
+      if (pathname === '/local-taxi' || pageParam === 'local-taxi' || searchParams.get('service') === 'local') {
+        resolvedRoute = 'local-taxi';
+      } else if (pathname === '/outstation-cabs' || pathname === '/outstation' || pageParam === 'outstation-cabs' || searchParams.get('service') === 'outstation') {
+        resolvedRoute = 'outstation-cabs';
+      } else if (pathname === '/airport-taxi' || pathname === '/airport' || pageParam === 'airport-taxi' || searchParams.get('service') === 'airport') {
+        resolvedRoute = 'airport-taxi';
+      } else if (pathname === '/tours' || pageParam === 'tours' || searchParams.get('service') === 'tours') {
+        resolvedRoute = 'tours';
+      } else {
+        resolvedRoute = 'home';
+      }
+
+      setCurrentRoute(resolvedRoute);
+      setActiveTourSlug(null);
+      const meta = PAGE_META[resolvedRoute] || PAGE_META['home'];
+      updateHeadTags(meta.title, meta.desc);
+    } catch {
+      // Graceful fallback
+    }
+  };
+
+  useEffect(() => {
+    syncRouteFromUrl();
+    window.addEventListener('popstate', syncRouteFromUrl);
+    return () => window.removeEventListener('popstate', syncRouteFromUrl);
   }, []);
 
-  const handleSelectCampaign = (id: string) => {
-    setCurrentCampaignId(id);
-    const preset = AD_CAMPAIGN_PRESETS.find(p => p.id === id);
-    if (preset) {
-      setActiveServiceKey(preset.primaryTab);
-    }
-  };
+  // Programmatic navigation that updates history and state smoothly
+  const handleNavigate = (route: string, tourSlug?: string) => {
+    let targetUrl = '/';
+    let targetRoute: AppRoute = 'home';
 
-  const handleSelectService = (serviceKey: string) => {
-    setActiveServiceKey(serviceKey);
-  };
-
-  const handleSelectRoute = (route: any) => {
-    if (route.category === 'airport') {
-      setActiveServiceKey('airport');
+    if (tourSlug) {
+      targetRoute = 'tour-detail';
+      targetUrl = `/tours/${tourSlug}/`;
+      const found = TOUR_PACKAGES.find(t => t.slug === tourSlug);
+      setActiveTourSlug(tourSlug);
+      if (found) {
+        updateHeadTags(found.pageTitle, found.metaDescription);
+      }
+    } else if (route === 'local-taxi') {
+      targetRoute = 'local-taxi';
+      targetUrl = '/local-taxi/';
+      setActiveTourSlug(null);
+      updateHeadTags(PAGE_META['local-taxi'].title, PAGE_META['local-taxi'].desc);
+    } else if (route === 'outstation-cabs') {
+      targetRoute = 'outstation-cabs';
+      targetUrl = '/outstation-cabs/';
+      setActiveTourSlug(null);
+      updateHeadTags(PAGE_META['outstation-cabs'].title, PAGE_META['outstation-cabs'].desc);
+    } else if (route === 'airport-taxi') {
+      targetRoute = 'airport-taxi';
+      targetUrl = '/airport-taxi/';
+      setActiveTourSlug(null);
+      updateHeadTags(PAGE_META['airport-taxi'].title, PAGE_META['airport-taxi'].desc);
+    } else if (route === 'tours') {
+      targetRoute = 'tours';
+      targetUrl = '/tours/';
+      setActiveTourSlug(null);
+      updateHeadTags(PAGE_META['tours'].title, PAGE_META['tours'].desc);
     } else {
-      setActiveServiceKey('outstation');
+      targetRoute = 'home';
+      targetUrl = '/';
+      setActiveTourSlug(null);
+      updateHeadTags(PAGE_META['home'].title, PAGE_META['home'].desc);
     }
-  };
 
-  const handleSelectFleet = (vehicleId: string) => {
-    // Navigates user to calculator
+    setCurrentRoute(targetRoute);
+    try {
+      window.history.pushState({}, '', targetUrl);
+    } catch {
+      // In constrained iframe environments, search params fallback
+      try {
+        if (targetRoute === 'tour-detail' && tourSlug) {
+          window.history.pushState({}, '', `?tour=${tourSlug}`);
+        } else if (targetRoute !== 'home') {
+          window.history.pushState({}, '', `?page=${targetRoute}`);
+        } else {
+          window.history.pushState({}, '', '/');
+        }
+      } catch {
+        // Ignore if pushState is restricted
+      }
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleOpenBookingModal = (details: any) => {
@@ -135,23 +206,6 @@ export default function App() {
   const handleOpenPolicy = (type: PolicyType) => {
     setActivePolicyType(type);
     setIsPolicyModalOpen(true);
-  };
-
-  const handleNavigateToTour = (slug: string) => {
-    const matched = TOUR_PACKAGES.find(t => t.slug === slug);
-    if (matched) {
-      setActiveTourSlug(slug);
-      document.title = matched.pageTitle;
-      window.history.pushState({}, '', `?tour=${slug}`);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleBackToHome = () => {
-    setActiveTourSlug(null);
-    document.title = 'C Taxi Coimbatore – 24/7 Call Taxi, Airport Transfer & Outstation Cabs';
-    window.history.pushState({}, '', window.location.pathname);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBookTourFromCard = (tour: TourPackage) => {
@@ -170,74 +224,130 @@ export default function App() {
   const activeTour = TOUR_PACKAGES.find(t => t.slug === activeTourSlug);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-amber-400 selection:text-neutral-950">
+    <div className="min-h-screen bg-white text-[#171717] flex flex-col font-sans selection:bg-[#FFBF00] selection:text-[#171717]">
       
-      {/* Top Navigation Bar with strict 3-zone contract */}
-      <Header onBookClick={() => setIsBookingModalOpen(true)} />
+      {/* 1. Header with C Taxi branding, 4 service page links, Call 9089223344 & WhatsApp buttons */}
+      <Header 
+        currentPage={currentRoute}
+        onNavigate={handleNavigate}
+        onBookClick={() => handleOpenBookingModal({
+          serviceType: 'local',
+          pickup: 'Coimbatore City (Doorstep)',
+          drop: 'Destination in Coimbatore / Outstation',
+          vehicle: 'Prime AC Sedan',
+          estimatedPrice: null,
+          breakdownNote: 'Quick dispatch request'
+        })} 
+      />
 
-      {activeTour ? (
-        /* Dedicated Standalone Tour Landing Page for Google Campaign Sitelinks */
-        <main className="flex-1">
+      {/* Main Content Area */}
+      <main className="flex-1">
+
+        {/* Route 1: Local Taxi Page */}
+        {currentRoute === 'local-taxi' && (
+          <LocalTaxiPage 
+            onOpenBookingModal={handleOpenBookingModal}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Route 2: Outstation Cabs Page */}
+        {currentRoute === 'outstation-cabs' && (
+          <OutstationCabsPage 
+            onOpenBookingModal={handleOpenBookingModal}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Route 3: Airport Taxi Page */}
+        {currentRoute === 'airport-taxi' && (
+          <AirportTaxiPage 
+            onOpenBookingModal={handleOpenBookingModal}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Route 4: Tours & Packages Hub Page */}
+        {currentRoute === 'tours' && (
+          <ToursPage 
+            onNavigateToTour={(slug) => handleNavigate('tour-detail', slug)}
+            onBookTour={handleBookTourFromCard}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Route 5: Dedicated Tour Detail Page (e.g. Ooty, Isha, Palani) */}
+        {currentRoute === 'tour-detail' && activeTour && (
           <TourDetailPage
             tour={activeTour}
-            onBackToHome={handleBackToHome}
-            onNavigateToTour={handleNavigateToTour}
+            onBackToHome={() => handleNavigate('tours')}
+            onNavigateToTour={(slug) => handleNavigate('tour-detail', slug)}
             onOpenBookingModal={handleOpenBookingModal}
           />
-        </main>
-      ) : (
-        /* Main Home Conversion Flow */
-        <>
-          {/* Google Ads Dynamic Keyword Scent & Campaign Matcher Bar */}
-          <CampaignBanner
-            currentCampaignId={currentCampaignId}
-            onSelectCampaign={handleSelectCampaign}
-          />
+        )}
 
-          <main className="flex-1">
-            {/* Hero Section with Dynamic Headline & Value Proposition */}
-            <Hero
-              currentCampaignId={currentCampaignId}
+        {/* Route 6: Homepage (Default) */}
+        {currentRoute === 'home' && (
+          <>
+            {/* 1. One primary hero section (No banners or debug elements above) */}
+            <Hero 
+              onNavigate={handleNavigate}
               onOpenBookingModal={handleOpenBookingModal}
             />
 
-            {/* Live Fare Calculator: 1. Local Rides -> 2. Outstation -> 3. Hourly Rentals -> 4. Airport */}
-            <FareCalculator
-              initialService={activeServiceKey}
-              onOpenBookingModal={handleOpenBookingModal}
+            {/* 2. Four service cards linking to the four dedicated service pages */}
+            <ServicesSection onNavigate={handleNavigate} />
+
+            {/* 3. Popular outstation routes with accurate starting fares (Ooty from 3,000) */}
+            <PopularRoutesSection 
+              onSelectRoute={(route) => {
+                if (route.category === 'airport') {
+                  handleNavigate('airport-taxi');
+                } else {
+                  handleNavigate('outstation-cabs');
+                }
+              }}
+              onNavigateToOutstation={() => handleNavigate('outstation-cabs')}
             />
 
-            {/* Featured Sightseeing & Tour Packages: Top 3 (Ooty-Coonoor-Kotagiri, Marudhamalai-Isha, Palani) + Sitelinks */}
-            <HomeToursSection
-              onNavigateToTour={handleNavigateToTour}
+            {/* 4. Featured tour packages (Top 3: Ooty-Coonoor-Kotagiri, Marudhamalai-Isha, Palani) */}
+            <HomeToursSection 
+              onNavigateToTour={(slug) => handleNavigate('tour-detail', slug)}
               onBookTour={handleBookTourFromCard}
+              onNavigateToAllTours={() => handleNavigate('tours')}
             />
 
-            {/* Core Mobility Services Bento Grid */}
-            <ServicesSection onSelectService={handleSelectService} />
+            {/* 5. Instant Fare Calculator & Booking Section */}
+            <FareCalculator onOpenBookingModal={handleOpenBookingModal} />
 
-            {/* Popular Outstation & Airport Routes with Starting Rates (Ooty from 3000) */}
-            <PopularRoutesSection onSelectRoute={handleSelectRoute} />
+            {/* 6. Fleet and vehicle options (Sedan, SUV, Innova Crysta — No hatchback) */}
+            <FleetSection 
+              onSelectFleet={() => {
+                const calcEl = document.getElementById('fare-calculator');
+                if (calcEl) calcEl.scrollIntoView({ behavior: 'smooth' });
+              }} 
+            />
 
-            {/* Clean Fleet Specifications & Rate Card (No Hatchback) */}
-            <FleetSection onSelectFleet={handleSelectFleet} />
-
-            {/* Coimbatore Localities Coverage, Guarantees & Verified Testimonials */}
+            {/* 7. Why choose C Taxi & Verified customer testimonials */}
             <TrustProofSection />
 
-            {/* High-Intent FAQ Section (Objection Killers) */}
+            {/* 8. Useful FAQs */}
             <FaqSection />
-          </main>
-        </>
-      )}
+          </>
+        )}
 
-      {/* Clean Quiet Footer with Google Ads Compliant Legal Links */}
-      <Footer onOpenPolicy={handleOpenPolicy} />
+      </main>
 
-      {/* High-Conversion Sticky Bottom Conversion Bar (Mobile & Web Friendly) */}
+      {/* Clean quiet Footer with contact information and customer policies */}
+      <Footer 
+        onNavigate={handleNavigate}
+        onOpenPolicy={handleOpenPolicy} 
+      />
+
+      {/* Fixed bottom booking bar on mobile & web */}
       <StickyBottomCta onOpenBookingModal={handleOpenBookingModal} />
 
-      {/* Fast Booking Modal */}
+      {/* Online Booking Modal */}
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
