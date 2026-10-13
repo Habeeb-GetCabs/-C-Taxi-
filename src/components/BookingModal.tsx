@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, Phone, MessageSquare, Car, MapPin, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
+import { trackEvent } from '../utils/tracking';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -25,6 +26,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, boo
       return;
     }
     setErrorMessage('');
+    // Open the dispatch conversation directly from the user's submit gesture. The customer
+    // must still tap Send in WhatsApp; this static site cannot silently deliver a message.
+    const dispatchUrl = `${WHATSAPP_URL}?text=${formattedWhatsAppText}`;
+    window.open(dispatchUrl, '_blank', 'noopener,noreferrer');
+    trackEvent('booking_handoff', { service_type: String(bookingDetails?.serviceType || 'unspecified') });
     setIsSubmitted(true);
   };
 
@@ -87,13 +93,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, boo
               </div>
 
               <div>
-                <h4 className="text-xl font-bold text-[#171717] font-heading">Booking Request Received!</h4>
+                <h4 className="text-xl font-bold text-[#171717] font-heading">Finish Sending Your Booking</h4>
                 <p className="text-xs sm:text-sm text-[#626262] mt-2 max-w-sm mx-auto leading-relaxed">
-                  Thank you, <strong className="text-[#171717]">{customerName || 'Customer'}</strong>. Our Coimbatore dispatch desk has received your booking for{' '}
-                  <strong className="text-[#171717]">{bookingDetails?.vehicle || 'your cab'}</strong>.
+                  Thank you, <strong className="text-[#171717]">{customerName || 'Customer'}</strong>. Your booking details are prepared for WhatsApp. Please send the message to deliver your request to C Taxi dispatch.
                 </p>
                 <p className="text-xs text-[#171717] mt-2 font-bold bg-[#FFBF00]/20 p-2 rounded-lg border border-[#FFBF00]/40">
-                  Driver details will be sent to {customerPhone} via SMS & WhatsApp within 2–5 minutes.
+                  Your request is not sent until you tap Send in WhatsApp. If WhatsApp did not open, use the button below.
                 </p>
               </div>
 
@@ -105,7 +110,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, boo
                   className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm text-white bg-[#25D366] hover:bg-[#20BD5A] transition-all shadow-md shadow-[#25D366]/20"
                 >
                   <MessageSquare className="w-4 h-4 fill-white/20" />
-                  <span>Send Direct WhatsApp Confirmation</span>
+                  <span>Open WhatsApp Booking Message</span>
                 </a>
 
                 <a

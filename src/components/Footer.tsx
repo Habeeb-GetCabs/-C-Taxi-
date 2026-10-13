@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPolicy }) => {
                   onClick={() => onNavigate('outstation-cabs')} 
                   className="hover:text-[#FFBF00] transition-colors text-left"
                 >
-                  Outstation Cabs & One-Way Drops (From ₹15/km)
+                  Outstation Cabs & One-Way Drops
                 </button>
               </li>
               <li>

@@ -20,7 +20,6 @@ import {
 import { TourPackage, TOUR_PACKAGES } from '../data/toursData';
 import { TourCardVisual } from './TourCardVisual';
 import { PHONE_NUMBER, DISPLAY_PHONE, WHATSAPP_URL } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface TourDetailPageProps {
   tour: TourPackage;
@@ -90,7 +89,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
     `• Vehicle: ${vehicleName}\n` +
     `• Date: ${travelDate}\n` +
     `• Pickup: ${pickupLocality}\n` +
-    `• Quoted Package Fare: ₹${activePrice.toLocaleString('en-IN')}\n\nPlease confirm availability and driver dispatch.`
+    `• Fare: Please provide a package quote for this vehicle and itinerary.\n\nPlease confirm availability and driver dispatch.`
   );
 
   const handleBookNow = () => {
@@ -99,7 +98,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
       pickup: pickupLocality,
       drop: tour.title,
       vehicle: vehicleName,
-      estimatedPrice: activePrice,
+      estimatedPrice: null,
       date: travelDate,
       time: '06:30 AM',
       breakdownNote: `${tour.duration} package: ${tour.routeOverview} with dedicated chauffeur`
@@ -152,7 +151,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
             <div>
               <span className="text-[#777777] uppercase font-bold text-[10px] tracking-wider block">Starting Rate</span>
               <div className="text-xl sm:text-2xl font-black text-[#171717] font-heading tabular-nums mt-0.5">
-                ₹{tour.startingPrice.toLocaleString('en-IN')}
+                Request quote
               </div>
             </div>
 
@@ -251,7 +250,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                     >
                       <div className="relative h-36 w-full overflow-hidden">
                         <img 
-                          src={assetUrl(photo.image)} 
+                          src={photo.image} 
                           alt={photo.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
@@ -375,7 +374,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                       </div>
                     </div>
                     <div className={`text-base font-black font-heading tabular-nums ${selectedVehicleType === 'sedan' ? 'text-[#FFBF00]' : 'text-[#171717]'}`}>
-                      ₹{tour.sedanPrice.toLocaleString('en-IN')}
+                      Request quote
                     </div>
                   </button>
 
@@ -396,7 +395,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                       </div>
                     </div>
                     <div className={`text-base font-black font-heading tabular-nums ${selectedVehicleType === 'suv' ? 'text-[#FFBF00]' : 'text-[#171717]'}`}>
-                      ₹{tour.suvPrice.toLocaleString('en-IN')}
+                      Request quote
                     </div>
                   </button>
 
@@ -417,7 +416,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                       </div>
                     </div>
                     <div className={`text-base font-black font-heading tabular-nums ${selectedVehicleType === 'crysta' ? 'text-[#FFBF00]' : 'text-[#171717]'}`}>
-                      ₹{tour.crystaPrice.toLocaleString('en-IN')}
+                      Contact for quote
                     </div>
                   </button>
 
@@ -463,7 +462,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                   className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm text-white bg-[#25D366] hover:bg-[#20BD5A] transition-all shadow-md active:scale-95"
                 >
                   <MessageSquare className="w-4 h-4 fill-white/20" />
-                  <span>Book on WhatsApp (₹{activePrice.toLocaleString('en-IN')})</span>
+                  <span>Book on WhatsApp — Request quote</span>
                 </a>
 
                 <button
@@ -509,7 +508,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({
                   >
                     <span className="truncate pr-2 font-semibold">{t.title}</span>
                     <span className="font-extrabold text-[#171717] font-mono shrink-0">
-                      ₹{t.startingPrice.toLocaleString('en-IN')}
+                      Request quote
                     </span>
                   </button>
                 ))}

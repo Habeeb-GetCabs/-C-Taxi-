@@ -68,8 +68,8 @@ export const TOUR_PACKAGES: TourPackage[] = [
       "Toll plaza fees and parking tickets as per official receipts"
     ],
     recommendedVehicles: "Prime Sedan (1-4 pax), Ertiga SUV (4-6 pax), Innova Crysta (6-7 pax)",
-    metaDescription: "Book Coimbatore to Ooty, Coonoor & Kotagiri cab tour from ₹3,000. 36 hairpin bends certified hill drivers, sanitized AC fleet, customizable 1 to 3 days itinerary.",
-    pageTitle: "Ooty, Coonoor & Kotagiri Tour from Coimbatore — C Taxi (From ₹3,000)"
+    metaDescription: "Book a Coimbatore to Ooty, Coonoor & Kotagiri cab tour with experienced hill drivers, sanitized AC fleet, and customizable 1 to 3 day itineraries. Request a fare quote.",
+    pageTitle: "Ooty, Coonoor & Kotagiri Tour from Coimbatore — C Taxi"
   },
   {
     slug: "marudhamalai-isha-kovai-kutralam",
@@ -110,8 +110,8 @@ export const TOUR_PACKAGES: TourPackage[] = [
       "Temple special darshan tickets and personal expenses"
     ],
     recommendedVehicles: "Prime Sedan (up to 4 pax), Ertiga SUV (up to 6 pax), Innova Crysta (up to 7 pax)",
-    metaDescription: "Coimbatore to Marudhamalai, Isha Yoga Center Adiyogi & Kovai Kutralam 1-day cab tour. Transparent fixed fare from ₹2,200, zero surge, 3D laser show waiting included.",
-    pageTitle: "Marudhamalai, Isha Adiyogi & Kovai Kutralam Tour — C Taxi (From ₹2,200)"
+    metaDescription: "Coimbatore to Marudhamalai, Isha Yoga Center Adiyogi & Kovai Kutralam 1-day cab tour. Request a package quote, with itinerary details and pickup options.",
+    pageTitle: "Marudhamalai, Isha Adiyogi & Kovai Kutralam Tour — C Taxi"
   },
   {
     slug: "palani-temple-pilgrimage",
@@ -153,8 +153,8 @@ export const TOUR_PACKAGES: TourPackage[] = [
       "National highway tolls at actuals as per slip"
     ],
     recommendedVehicles: "Prime Sedan, Ertiga SUV, Toyota Innova Crysta",
-    metaDescription: "Book Coimbatore to Palani temple cab package from ₹2,800. Dedicated Adivaram waiting, senior-friendly drops, transparent round-trip pricing with C Taxi.",
-    pageTitle: "Palani Temple Pilgrimage Taxi from Coimbatore — C Taxi (From ₹2,800)"
+    metaDescription: "Book a Coimbatore to Palani temple cab package with dedicated Adivaram waiting and senior-friendly drops. Request a package quote from C Taxi.",
+    pageTitle: "Palani Temple Pilgrimage Taxi from Coimbatore — C Taxi"
   },
   {
     slug: "valparai-topslip-safari",
@@ -186,7 +186,7 @@ export const TOUR_PACKAGES: TourPackage[] = [
     ],
     inclusions: [
       "Commercial AC vehicle with mountain certified driver",
-      "Fuel, 250 km coverage, and hill safety allowance",
+      "Fuel and applicable route coverage; confirm package details with dispatch",
       "Chauffeur assistance at forest checkposts (Aliyar & Topslip)",
       "Luggage protection and stops at scenic photography viewpoints"
     ],
@@ -195,8 +195,8 @@ export const TOUR_PACKAGES: TourPackage[] = [
       "Personal meals and lodging expenses"
     ],
     recommendedVehicles: "Ertiga SUV (Strong hill pull) or Toyota Innova Crysta",
-    metaDescription: "Coimbatore to Valparai & Topslip cab tour package from ₹3,600. Expert drivers for 40 hairpin bends, Anamalai tea estates and wildlife safari.",
-    pageTitle: "Valparai & Topslip Tour Package from Coimbatore — C Taxi (From ₹3,600)"
+    metaDescription: "Coimbatore to Valparai & Topslip cab tour package. Expert drivers for ghat roads, Anamalai tea estates and wildlife safari. Request a quote.",
+    pageTitle: "Valparai & Topslip Tour Package from Coimbatore — C Taxi"
   },
   {
     slug: "kodaikanal-hills",
@@ -227,7 +227,7 @@ export const TOUR_PACKAGES: TourPackage[] = [
     inclusions: [
       "Round trip travel in sanitized AC Prime Sedan or SUV",
       "500 km outstation billing allowance over 2 days",
-      "Driver batta for 2 days included (₹500 x 2)",
+      "Driver allowance and package inclusions confirmed with dispatch",
       "Luggage protection and hotel pickup/drop in Kodaikanal"
     ],
     exclusions: [
@@ -236,7 +236,7 @@ export const TOUR_PACKAGES: TourPackage[] = [
       "Tolls & parking at actuals"
     ],
     recommendedVehicles: "Prime Sedan, Ertiga SUV, or Innova Crysta",
-    metaDescription: "Coimbatore to Kodaikanal 2-3 days taxi tour package from ₹5,500. Reliable AC fleet, certified hill chauffeurs, transparent pricing with C Taxi.",
-    pageTitle: "Kodaikanal Tour Package from Coimbatore — C Taxi (From ₹5,500)"
+    metaDescription: "Coimbatore to Kodaikanal 2-3 day taxi tour package with AC fleet and hill chauffeurs. Request a package quote from C Taxi.",
+    pageTitle: "Kodaikanal Tour Package from Coimbatore — C Taxi"
   }
 ];

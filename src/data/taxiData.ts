@@ -99,8 +99,8 @@ export const OUTSTATION_DESTINATIONS = [
 ];
 
 // FLEET WITHOUT HATCHBACK
-// Local math: Sedan base 100 + 28/km; SUV base 100 + 35/km; Premium SUV base 150 + 45/km
-// Outstation math: Sedan 15/km; SUV 20/km; Premium SUV 23/km; Driver batta: 500; Min 250km/day; Hill charges: SUV +400, Premium SUV +600.
+// Approved display rules: Local ₹100 base + ₹30/km for Sedan/SUV; premium vehicles quote-only.
+// Outstation round trip: ₹2,000/day + ₹12/km, minimum 100 km/day. One-way: Sedan ₹15/km + ₹500 driver allowance; SUV ₹22/km + ₹600 driver allowance, minimum 130 km. Premium vehicles quote-only.
 export const VEHICLE_FLEET: VehicleType[] = [
   {
     id: "sedan",
@@ -110,10 +110,10 @@ export const VEHICLE_FLEET: VehicleType[] = [
     capacity: "4 Passengers",
     luggage: "3 Large Bags",
     localBaseFare: 100,
-    localPerKm: 28,
-    ratePerKm: 15, // Outstation 15 Rs/km
-    minKmPerDay: 250,
-    driverAllowancePerDay: 500, // 500 Driver batta
+    localPerKm: 30,
+    ratePerKm: 15, // One-way Sedan rate; round-trip uses day-rent tariff
+    minKmPerDay: 100,
+    driverAllowancePerDay: 500,
     hillCharge: 0,
     features: ["Quiet AC Cabin", "Large Dedicated Trunk", "Spacious Legroom", "Digital Meter"],
     recommendedFor: "Local city travel, airport drops & comfortable outstation trips"
@@ -126,11 +126,11 @@ export const VEHICLE_FLEET: VehicleType[] = [
     capacity: "6 Passengers",
     luggage: "4 Bags + Rear Storage",
     localBaseFare: 100,
-    localPerKm: 35,
-    ratePerKm: 20, // Outstation 20 Rs/km
-    minKmPerDay: 250,
-    driverAllowancePerDay: 500, // 500 Driver batta
-    hillCharge: 400, // Hill charges +400 for SUV
+    localPerKm: 30,
+    ratePerKm: 22, // One-way SUV rate; round-trip uses day-rent tariff
+    minKmPerDay: 100,
+    driverAllowancePerDay: 600,
+    hillCharge: 0,
     features: ["Dual Zone AC", "3-Row Seating", "Strong Hill Pulling Power", "USB Charging"],
     recommendedFor: "Family trips to Ooty/Valparai, group airport transit & outstation tours"
   },
@@ -142,11 +142,11 @@ export const VEHICLE_FLEET: VehicleType[] = [
     capacity: "7 Passengers",
     luggage: "5 Large Suitcases",
     localBaseFare: 150,
-    localPerKm: 45,
-    ratePerKm: 23, // Outstation 23 Rs/km
-    minKmPerDay: 250,
-    driverAllowancePerDay: 500, // 500 Driver batta
-    hillCharge: 600, // Hill charges +600 for Premium SUV
+    localPerKm: 0,
+    ratePerKm: 0, // Quote only: do not publish a numeric premium-vehicle tariff
+    minKmPerDay: 100,
+    driverAllowancePerDay: 0,
+    hillCharge: 0,
     features: ["Plush Reclining Captain Seats", "Supreme Mountain Safety", "Executive Ride Quality", "Expert Chauffeur"],
     recommendedFor: "VIP business travelers, family holidays to Nilgiris & extended tours"
   }
@@ -160,65 +160,17 @@ export const VEHICLE_FLEET: VehicleType[] = [
 // 8 hr: 1125 + (5 * 350) = 2875
 // 12 hr: 1125 + (9 * 350) = 4275
 export function calculateHourlyRate(hours: number, vehicleId: string): number {
-  let sedanRate = 0;
-  if (hours <= 3) {
-    sedanRate = hours * 375;
-  } else {
-    sedanRate = (3 * 375) + ((hours - 3) * 350);
-  }
-
-  if (vehicleId === 'sedan') return sedanRate;
-  if (vehicleId === 'suv_ertiga') return Math.round(sedanRate * 1.3);
-  if (vehicleId === 'premium_suv') return Math.round(sedanRate * 1.6);
-  return sedanRate;
+  if (vehicleId === 'sedan') return hours * 350;
+  if (vehicleId === 'suv_ertiga') return hours * 500;
+  return 0; // Premium vehicles are quote-only; never display an invented tariff.
 }
 
 export const HOURLY_PACKAGES: HourlyPackage[] = [
-  {
-    id: "pkg_2hr",
-    hours: 2,
-    km: 20,
-    basePrice: 750, // 2 * 375
-    suvPrice: 975,
-    premiumSuvPrice: 1200,
-    tagline: "Quick appointments & short city errands"
-  },
-  {
-    id: "pkg_3hr",
-    hours: 3,
-    km: 30,
-    basePrice: 1125, // 3 * 375
-    suvPrice: 1460,
-    premiumSuvPrice: 1800,
-    tagline: "Doctor visits & business meetings"
-  },
-  {
-    id: "pkg_4hr",
-    hours: 4,
-    km: 40,
-    basePrice: 1475, // 1125 + 350
-    suvPrice: 1915,
-    premiumSuvPrice: 2360,
-    tagline: "Cross Cut Road shopping & hospital visits"
-  },
-  {
-    id: "pkg_8hr",
-    hours: 8,
-    km: 80,
-    basePrice: 2875, // 1125 + (5 * 350)
-    suvPrice: 3735,
-    premiumSuvPrice: 4600,
-    tagline: "Full day Coimbatore corporate meetings & temple tour"
-  },
-  {
-    id: "pkg_12hr",
-    hours: 12,
-    km: 120,
-    basePrice: 4275, // 1125 + (9 * 350)
-    suvPrice: 5555,
-    premiumSuvPrice: 6840,
-    tagline: "Extensive industrial visits, TIDEL park & factories"
-  }
+  { id: "pkg_2hr", hours: 2, km: 20, basePrice: 700, suvPrice: 1000, premiumSuvPrice: 0, tagline: "Quick appointments & short city errands" },
+  { id: "pkg_3hr", hours: 3, km: 30, basePrice: 1050, suvPrice: 1500, premiumSuvPrice: 0, tagline: "Doctor visits & business meetings" },
+  { id: "pkg_4hr", hours: 4, km: 40, basePrice: 1400, suvPrice: 2000, premiumSuvPrice: 0, tagline: "Cross Cut Road shopping & hospital visits" },
+  { id: "pkg_8hr", hours: 8, km: 80, basePrice: 2800, suvPrice: 4000, premiumSuvPrice: 0, tagline: "Full day Coimbatore corporate meetings & temple tour" },
+  { id: "pkg_12hr", hours: 12, km: 120, basePrice: 4200, suvPrice: 6000, premiumSuvPrice: 0, tagline: "Extensive industrial visits, TIDEL park & factories" }
 ];
 
 // Ooty starting price strictly 3000
@@ -327,15 +279,15 @@ export const FAQS = [
   },
   {
     q: "What is your outstation pricing and driver batta?",
-    a: "Outstation rates are ₹15/km for Prime Sedan, ₹20/km for 6-seater SUV, and ₹23/km for Premium SUV Crysta, with a minimum billing of 250 km per day. Driver batta is flat ₹500 per day. For hill stations, a dedicated hill safety charge of ₹400 for SUV and ₹600 for Premium SUV applies."
+    a: "For round trips, the day rent is ₹2,000 plus ₹12/km, with a minimum coverage of 100 km per day. For one-way drops, Prime Sedan is ₹15/km plus ₹500 driver allowance, and the 6-seater SUV is ₹22/km plus ₹600 driver allowance, with a minimum coverage of 130 km. Innova Crysta and Tempo Traveller are quote-only."
   },
   {
     q: "What are the rates for Ooty from Coimbatore?",
-    a: "Our Ooty cabs start from ₹3,000 for Prime Sedan. Our hill chauffeurs are certified for the Nilgiri Kalhatty 36 hairpin bends with extensive mountain driving experience."
+    a: "Contact C Taxi for an Ooty trip estimate based on trip duration and distance. The final estimated fare is shown before booking; premium vehicles are quote-only."
   },
   {
     q: "How do your Hourly Rental packages work?",
-    a: "Our hourly packages start at ₹375 per hour for the first 3 hours, and ₹350 per hour thereafter. You can keep the car and chauffeur with you for continuous shopping, clinic visits, or multiple factory meetings across Kovai."
+    a: "Hourly rental is ₹350/hour for a Sedan and ₹500/hour for a 6-seater SUV. The included distance is 10 km per hour; extra distance is ₹20/km for Sedan and ₹25/km for SUV. Innova Crysta and Tempo Traveller are quote-only."
   },
   {
     q: "How fast can C Taxi reach my location in Coimbatore?",
@@ -361,7 +313,7 @@ export const AD_CAMPAIGN_PRESETS = [
     title: "Outstation Cabs & Ooty Hill Tours",
     query: "coimbatore to ooty cab / outstation taxi coimbatore",
     h1: "Coimbatore to Ooty & Outstation Cabs — Safe Drivers & Sanitized Fleet",
-    subtext: "Ooty trips starting from ₹3,000. Outstation cabs from ₹15/km for Sedan, ₹20/km for SUV with certified mountain chauffeurs.",
+    subtext: "Round trips use a ₹2,000/day rent plus ₹12/km with a minimum 100 km/day. One-way Sedan and SUV tariffs are available; premium vehicles are quote-only.",
     primaryTab: "outstation"
   },
   {
@@ -369,7 +321,7 @@ export const AD_CAMPAIGN_PRESETS = [
     title: "Hourly Rental Packages",
     query: "hourly car rental coimbatore with driver package",
     h1: "Coimbatore City Hourly Rental Cabs — Flexible Packages with Driver",
-    subtext: "Transparent pricing: ₹375/hour for first 3 hours, then ₹350/hour. Ideal for Cross Cut Road shopping, clinic visits, and multi-stop business meetings.",
+    subtext: "Hourly rental: Sedan ₹350/hour or SUV ₹500/hour, with extra-kilometre charges disclosed before booking.",
     primaryTab: "hourly"
   },
   {

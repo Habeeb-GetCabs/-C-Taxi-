@@ -24,7 +24,6 @@ import {
   DISPLAY_PHONE, 
   WHATSAPP_URL 
 } from '../data/taxiData';
-import { assetUrl } from '../utils/assetUrl';
 
 interface OutstationCabsPageProps {
   onOpenBookingModal: (details: any) => void;
@@ -144,34 +143,23 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
   const activeDest = OUTSTATION_DESTINATIONS.find(d => d.name === destination) || OUTSTATION_DESTINATIONS[0];
 
   // Outstation calculation rules:
-  // Sedan: ₹15/km, SUV: ₹20/km, Crysta: ₹23/km
-  // Round trip: min 250 km/day, Driver batta: ₹500/day
-  // One way: min 130 km, Driver batta: ₹500
-  // Hill charges: if hill station, SUV +400, Crysta +600
-  // Ooty starting price: 3000
+  // Approved tariff: round trip ₹2,000/day + ₹12/km, minimum 100 km/day.
+  // One-way: Sedan ₹15/km + ₹500; SUV ₹22/km + ₹600, minimum 130 km. Premium SUV is quote-only.
   let calculatedDistance = 0;
-  let driverBatta = 500 * (tripType === 'round' ? tripDays : 1);
+  const driverBatta = tripType === 'round' ? 0 : (vehicle.id === 'suv_ertiga' ? 600 : 500);
   let hillFee = 0;
-
-  if (activeDest.isHill) {
-    if (vehicle.id === 'suv_ertiga') hillFee = 400;
-    else if (vehicle.id === 'premium_suv') hillFee = 600;
-  }
 
   if (tripType === 'round') {
     const roundKm = activeDest.distance * 2;
-    calculatedDistance = Math.max(roundKm, 250 * tripDays);
+    const routeCoverageKm = activeDest.name.toLowerCase().includes('ooty') && tripDays >= 2 ? 250 : roundKm;
+    calculatedDistance = Math.max(routeCoverageKm, 100 * tripDays);
   } else {
     calculatedDistance = Math.max(activeDest.distance, 130);
   }
 
-  const kmFare = calculatedDistance * vehicle.ratePerKm;
-  let totalFare = kmFare + driverBatta + hillFee;
-
-  // Strict minimum starting price for Ooty is 3000
-  if (activeDest.name.toLowerCase().includes('ooty') && totalFare < 3000) {
-    totalFare = 3000;
-  }
+  const totalFare = vehicle.id === 'premium_suv' ? 0 : tripType === 'round'
+    ? (2000 * tripDays) + (calculatedDistance * 12)
+    : (calculatedDistance * (vehicle.id === 'suv_ertiga' ? 22 : 15)) + driverBatta;
 
   const handleBookNow = () => {
     onOpenBookingModal({
@@ -179,29 +167,29 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
       pickup: 'Coimbatore City (Doorstep)',
       drop: activeDest.name,
       vehicle: vehicle.name,
-      estimatedPrice: totalFare,
+      estimatedPrice: vehicle.id === 'premium_suv' ? null : totalFare,
       date: new Date().toISOString().split('T')[0],
       time: '06:00 AM',
-      breakdownNote: `${tripType === 'round' ? `Round Trip (${tripDays} Days)` : 'One-Way Drop'} · ${calculatedDistance} km @ ₹${vehicle.ratePerKm}/km + ₹${driverBatta} Driver Batta${hillFee > 0 ? ` + ₹${hillFee} Hill Fee` : ''}`
+      breakdownNote: `${tripType === 'round' ? `Round Trip (${tripDays} Days)` : 'One-Way Drop'} · final estimate only`
     });
   };
 
   const outstationFaqs = [
     {
       q: "What is your outstation rate per kilometer from Coimbatore?",
-      a: "Our approved outstation rates are ₹15/km for Prime Sedan (Dzire/Etios), ₹20/km for Spacious SUV (Ertiga 6-seater), and ₹23/km for Premium SUV (Innova Crysta). For round trips, minimum billing is 250 km per calendar day."
+      a: "Round trips: ₹2,000/day plus ₹12/km, with a minimum coverage of 100 km/day. One-way drops: Sedan ₹15/km plus ₹500 driver allowance; 6-seater SUV ₹22/km plus ₹600 driver allowance, with a minimum 130 km coverage. Innova Crysta and Tempo Traveller are quote-only."
     },
     {
       q: "How does driver batta work?",
-      a: "Driver batta (allowance for driver food and accommodation) is a flat ₹500 per calendar day for all outstation journeys."
+      a: "For one-way drops, driver allowance is ₹500 for Sedan and ₹600 for the 6-seater SUV. Round-trip fares follow the published day-rent tariff."
     },
     {
       q: "Are hill station charges applicable for Ooty and Valparai?",
-      a: "For hill stations like Ooty, Coonoor, Valparai, and Kodaikanal, a hill safety charge of ₹400 applies for 6-seater SUVs and ₹600 for Innova Crysta to account for specialized high-altitude driving and hairpin bend safety. Cabs to Ooty start at ₹3,000."
+      a: "Please contact dispatch to confirm any route-specific permit, toll, parking, or hill-route charges before booking. Premium vehicles are quote-only."
     },
     {
       q: "Do you offer one-way drop taxi service to other cities?",
-      a: "Yes! For one-way drops from Coimbatore to cities like Salem, Madurai, Tiruppur, Palakkad, or Bangalore, you only pay for the one-way travel with a minimum coverage of 130 km + ₹500 driver batta."
+      a: "Yes! For one-way drops from Coimbatore to cities like Salem, Madurai, Tiruppur, Palakkad, or Bangalore, one-way coverage is a minimum of 130 km. Sedan driver allowance is ₹500 and SUV driver allowance is ₹600."
     },
     {
       q: "Are toll gate fees and state permits included?",
@@ -239,7 +227,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
               
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFBF00]/15 text-[#FFBF00] text-xs font-bold border border-[#FFBF00]/30">
                 <Mountain className="w-3.5 h-3.5 text-[#FFBF00]" />
-                <span>Ooty Starting from ₹3,000 · Outstation from ₹15/km</span>
+                <span>Round trip ₹2,000/day + ₹12/km · One-way Sedan from ₹15/km</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15] font-heading">
@@ -279,22 +267,22 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                 </div>
                 <div className="bg-neutral-900/80 p-2.5 rounded-xl border border-neutral-800">
                   <span className="text-[#A0A09C] block text-[11px]">Family SUV</span>
-                  <span className="font-extrabold text-[#FFBF00] text-sm">₹20 / km</span>
+                  <span className="font-extrabold text-[#FFBF00] text-sm">₹22 / km</span>
                 </div>
                 <div className="bg-neutral-900/80 p-2.5 rounded-xl border border-neutral-800">
                   <span className="text-[#A0A09C] block text-[11px]">Innova Crysta</span>
-                  <span className="font-extrabold text-[#FFBF00] text-sm">₹23 / km</span>
+                  <span className="font-extrabold text-[#FFBF00] text-sm">Contact for quote</span>
                 </div>
                 <div className="bg-neutral-900/80 p-2.5 rounded-xl border border-neutral-800">
                   <span className="text-[#A0A09C] block text-[11px]">Driver Batta</span>
-                  <span className="font-extrabold text-white text-sm">₹500 / day</span>
+                  <span className="font-extrabold text-white text-sm">Sedan ₹500 · SUV ₹600 (one-way)</span>
                 </div>
               </div>
 
               {/* Scenic Highway Banner */}
               <div className="relative h-28 sm:h-32 rounded-xl overflow-hidden border border-neutral-800 mt-2 shadow-sm">
                 <img 
-                  src={assetUrl('/images/destinations/tour-valparai-hairpins.webp')}
+                  src="/images/destinations/tour-valparai-hairpins.webp"
                   alt="Scenic mountain highway in Western Ghats and Nilgiri tea hills"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -375,7 +363,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                         }`}
                       >
                         <div className="text-xs font-bold truncate">{v.name.replace('Prime AC ', '').replace('Spacious ', '')}</div>
-                        <div className={`text-[10px] font-bold ${selectedVehicleId === v.id ? 'text-[#FFBF00]' : 'text-[#777777]'}`}>₹{v.ratePerKm}/km</div>
+                        <div className={`text-[10px] font-bold ${selectedVehicleId === v.id ? 'text-[#FFBF00]' : 'text-[#777777]'}`}>{v.id === 'premium_suv' ? 'Contact for quote' : tripType === 'round' ? 'Day-rent tariff' : `₹${v.ratePerKm}/km`}</div>
                       </button>
                     ))}
                   </div>
@@ -406,7 +394,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                       <div className="flex justify-between items-center text-xs font-bold text-[#171717] mb-1">
                         <span>Trip Duration:</span>
                         <span className="font-mono text-[#171717] bg-[#F5F2EA] px-2 py-0.5 rounded border border-[#E5E0D8]">
-                          {tripDays} Day{tripDays > 1 ? 's' : ''} (min {250 * tripDays} km)
+                          {tripDays} Day{tripDays > 1 ? 's' : ''} (min {100 * tripDays} km)
                         </span>
                       </div>
                       <input
@@ -434,21 +422,13 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                     <div>
                       <span className="text-[11px] text-[#A0A09C] block">Estimated Outstation Fare:</span>
                       <div className="text-2xl font-black text-[#FFBF00] font-heading">
-                        ₹{totalFare.toLocaleString('en-IN')}
+                        {vehicle.id === 'premium_suv' ? 'Contact for quote' : '₹' + totalFare.toLocaleString('en-IN')}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-[#A0A09C] block">Billed Distance:</span>
-                      <div className="text-xs font-bold text-white font-mono">{calculatedDistance} km</div>
-                    </div>
+
                   </div>
-                  <div className="text-[10px] text-[#A0A09C] border-t border-neutral-800 pt-1.5 space-y-0.5">
-                    <div>• ₹{vehicle.ratePerKm}/km rate × {calculatedDistance} km = ₹{(calculatedDistance * vehicle.ratePerKm).toLocaleString('en-IN')}</div>
-                    <div>• Driver Batta: ₹{driverBatta} ({tripType === 'round' ? `${tripDays} day${tripDays > 1 ? 's' : ''}` : 'One-way'})</div>
-                    {hillFee > 0 && <div>• Hill Safety Charge: ₹{hillFee} ({vehicle.name})</div>}
-                    {activeDest.name.toLowerCase().includes('ooty') && (
-                      <div className="text-[#FFBF00] font-bold text-[10px] pt-0.5">✓ Ooty Special Fare from ₹3,000</div>
-                    )}
+                  <div className="text-[10px] text-[#A0A09C] border-t border-neutral-800 pt-1.5">
+                    {vehicle.id === 'premium_suv' ? 'Contact dispatch for a vehicle-specific quote.' : tripType === 'round' ? `Round trip estimate for ${tripDays} day${tripDays > 1 ? 's' : ''}. Minimum coverage: 100 km/day.` : 'One-way estimate with minimum 130 km coverage and applicable driver allowance.'}
                   </div>
                 </div>
 
@@ -479,7 +459,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                 Verified Destinations
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#171717] font-heading mt-2.5">
-                Popular Outstation Routes &amp; Starting Fares
+                Popular Outstation Routes
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#777777] max-w-md">
@@ -499,7 +479,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                   {/* Photo Header */}
                   <div className="relative h-44 w-full overflow-hidden">
                     <img 
-                      src={assetUrl(card.image)} 
+                      src={card.image} 
                       alt={card.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       loading="lazy"
@@ -539,10 +519,8 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                 <div className="p-4 pt-0">
                   <div className="border-t border-[#E5E0D8] pt-3 flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] text-[#777777] block uppercase font-bold tracking-wider">{card.priceLabel}</span>
-                      <span className="text-2xl font-black text-[#171717] font-heading">
-                        ₹{card.price.toLocaleString('en-IN')}
-                      </span>
+                      <span className="text-[10px] text-[#777777] block uppercase font-bold tracking-wider">Fare</span>
+                      <span className="text-xl font-black text-[#171717] font-heading">Contact for quote</span>
                     </div>
                     <button
                       type="button"
@@ -591,7 +569,7 @@ export const OutstationCabsPage: React.FC<OutstationCabsPageProps> = ({ onOpenBo
                       {v.category}
                     </span>
                     <span className="text-xs font-mono font-bold text-[#171717]">
-                      ₹{v.ratePerKm}/km
+                      {v.id === 'premium_suv' ? 'Contact for quote' : 'Get final estimate'}
                     </span>
                   </div>
 

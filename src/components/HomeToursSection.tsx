@@ -106,7 +106,7 @@ export const HomeToursSection: React.FC<HomeToursSectionProps> = ({
                     <div>
                       <span className="text-[10px] text-[#777777] block uppercase font-bold tracking-wider">Starting Rate</span>
                       <div className="text-2xl font-black text-[#171717] font-heading tabular-nums">
-                        ₹{tour.startingPrice.toLocaleString('en-IN')}
+                        Request quote
                       </div>
                     </div>
                     <span className="text-[11px] text-[#777777]">AC Cab + Driver</span>
